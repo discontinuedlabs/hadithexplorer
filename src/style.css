@@ -1,0 +1,20 @@
+.hadith-box {
+    padding: 10px;
+    margin: 10px;
+    outline: 1px solid black;
+}
+
+.hadith-box .hadith {
+    margin-bottom: 20px;
+}
+
+/* .hadith-box .hadith-info {
+} */
+
+.hadith-box .info-subtitle {
+    color: blue;
+}
+
+.hadith-box .search-keys {
+    color: red;
+}
