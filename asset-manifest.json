@@ -1,10 +1,10 @@
 {
   "files": {
-    "main.js": "/hadithexplorer/static/js/main.41bf7678.js",
+    "main.js": "/hadithexplorer/static/js/main.687896e7.js",
     "index.html": "/hadithexplorer/index.html",
-    "main.41bf7678.js.map": "/hadithexplorer/static/js/main.41bf7678.js.map"
+    "main.687896e7.js.map": "/hadithexplorer/static/js/main.687896e7.js.map"
   },
   "entrypoints": [
-    "static/js/main.41bf7678.js"
+    "static/js/main.687896e7.js"
   ]
 }
