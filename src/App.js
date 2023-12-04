@@ -1,13 +1,12 @@
 import React from "react";
-import SearchForm from "./components/SearchForm";
+import HadithSearch from "./components/HadithSearch";
 
 export default function App() {
+    const [language, setLangauge] = React.useState("en");
+
     return (
         <div className="App">
-            {/* <BooksSlider /> */}
-            {/* <input type="text"> */}
-            {/* <button>Clear</button> */}
-            <SearchForm />
+            <HadithSearch language={language} />
         </div>
     );
 }
