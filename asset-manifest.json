@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/hadithexplorer/static/css/main.a0a404f8.css",
-    "main.js": "/hadithexplorer/static/js/main.02266066.js",
+    "main.js": "/hadithexplorer/static/js/main.c0dab41b.js",
     "index.html": "/hadithexplorer/index.html",
     "main.a0a404f8.css.map": "/hadithexplorer/static/css/main.a0a404f8.css.map",
-    "main.02266066.js.map": "/hadithexplorer/static/js/main.02266066.js.map"
+    "main.c0dab41b.js.map": "/hadithexplorer/static/js/main.c0dab41b.js.map"
   },
   "entrypoints": [
     "static/css/main.a0a404f8.css",
-    "static/js/main.02266066.js"
+    "static/js/main.c0dab41b.js"
   ]
 }
