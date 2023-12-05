@@ -1,7 +1,9 @@
 import React from "react";
+import { v4 as uuidv4 } from "uuid";
 import HadithBox from "./HadithBox";
 
 export default function HadithSearch(props) {
+    const { language } = props;
     const [searchTerm, setSearchTerm] = React.useState("");
     const [ahadith, setAhadith] = React.useState([]);
     const [autoTranslate, setAutoTranslate] = React.useState(false);
@@ -25,6 +27,10 @@ export default function HadithSearch(props) {
         }
     }, [searchTerm]);
 
+    function handleSaveClick() {
+        return;
+    }
+
     return (
         <div className="hadith-search">
             <input type="text" onChange={(event) => setSearchTerm(event.target.value)} />
@@ -35,9 +41,9 @@ export default function HadithSearch(props) {
             >
                 Clear
             </button>
-            {props.language !== "ar" && (
+            {language !== "ar" && (
                 <div>
-                    <label for="translate">Translate</label>
+                    <label htmlFor="translate">Translate</label>
                     <input
                         type="checkbox"
                         name="translate"
@@ -50,13 +56,14 @@ export default function HadithSearch(props) {
             {ahadith.length > 0 &&
                 ahadith.map((item) => (
                     <HadithBox
-                        key={item.id}
+                        key={uuidv4()}
                         hadith={item.hadith}
                         hadithInfo={item.hadithInfo}
                         autoTranslate={autoTranslate}
+                        language={language}
+                        handleSaveClick={handleSaveClick}
                     />
                 ))}
-
             {ahadith.length > 0 && (
                 <button
                     onClick={() =>

@@ -1,25 +1,69 @@
 import React from "react";
 
 export default function HadithBox(props) {
+    const { language, hadith, hadithInfo, autoTranslate, handleSaveClick } = props;
+    const hadithRef = React.useRef(null);
+    const hadithInfoRef = React.useRef(null);
+    const [translatedHadith, setTranslatedHadith] = React.useState("");
+    const [translatedHadithInfo, setTranslatedHadithInfo] = React.useState("");
+
+    React.useEffect(() => {
+        if (hadithRef.current && autoTranslate && language !== "ar") {
+            const text = hadithRef.current.textContent;
+            const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=ar&tl=${language}&dt=t&q=${text}`;
+            fetch(url)
+                .then((response) => response.json())
+                .then((data) => {
+                    const translatedText = data[0][0][0];
+                    console.log(translatedText);
+                    setTranslatedHadith(translatedText);
+                })
+                .catch((error) => console.error(error));
+        }
+    }, [autoTranslate, language]);
+
+    React.useEffect(() => {
+        if (hadithRef.current && autoTranslate && language !== "ar") {
+            const text = hadithInfoRef.current.textContent;
+            const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=ar&tl=${language}&dt=t&q=${text}`;
+            fetch(url)
+                .then((response) => response.json())
+                .then((data) => {
+                    const translatedText = data[0][0][0];
+                    console.log(translatedText);
+                    setTranslatedHadithInfo(translatedText);
+                })
+                .catch((error) => console.error(error));
+        }
+    }, [autoTranslate, language]);
+
     return (
-        <div dir="rtl" className="hadith-box">
+        <div dir={language === "ar" ? "rtl" : "ltr"} className="hadith-box">
             <div className="hadithContainer">
                 <div
                     dir="rtl" // always rtl
                     className="hadith"
-                    dangerouslySetInnerHTML={{ __html: props.hadith }} // dorar.net api returns results as html elements
+                    ref={hadithRef}
+                    dangerouslySetInnerHTML={{ __html: hadith }} // dorar.net api returns results as html elements
                 ></div>
                 <div
+                    dir="rtl"
                     className="hadith-info"
-                    dangerouslySetInnerHTML={{ __html: props.hadithInfo }} // dorar.net api returns results as html elements
+                    ref={hadithInfoRef}
+                    dangerouslySetInnerHTML={{ __html: hadithInfo }} // dorar.net api returns results as html elements
                 ></div>
             </div>
 
-            {props.autoTranslate && <p id="translatedHadith">translated text</p>}
+            {autoTranslate && language !== "ar" && (
+                <div>
+                    <p id="translatedHadith">{translatedHadith}</p>
+                    <p id="translatedHadithInfo">{translatedHadithInfo}</p>
+                </div>
+            )}
 
             <div className="user-note">
                 <input type="text" />
-                <button>Save</button>
+                <button onClick={handleSaveClick}>Save</button>
             </div>
         </div>
     );
