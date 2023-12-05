@@ -8,6 +8,14 @@ export default function HadithSearch(props) {
     const [ahadith, setAhadith] = React.useState([]);
     const [autoTranslate, setAutoTranslate] = React.useState(false);
 
+    /* This function is mainly for PrayTimePro adhkar reference, it searches based on the q param in the link
+    example: http://discontinuedlabs.github.io/hadithexplorer/?q=search-term */
+    React.useEffect(() => {
+        const params = new URLSearchParams(window.location.search);
+        const query = params.get("q");
+        setSearchTerm(query);
+    }, []);
+
     React.useEffect(() => {
         if (searchTerm) {
             fetch(`https://corsproxy.io/?https://dorar.net/dorar_api.json?skey=${searchTerm}`)
@@ -33,7 +41,11 @@ export default function HadithSearch(props) {
 
     return (
         <div className="hadith-search">
-            <input type="text" onChange={(event) => setSearchTerm(event.target.value)} />
+            <input
+                type="text"
+                id="search-bar"
+                onChange={(event) => setSearchTerm(event.target.value)}
+            />
             <button
                 onClick={() => {
                     document.querySelector("input").value = "";
