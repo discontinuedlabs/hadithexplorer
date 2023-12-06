@@ -3,17 +3,20 @@ import { v4 as uuidv4 } from "uuid";
 import HadithBox from "./HadithBox";
 
 export default function HadithSearch(props) {
-    const { language } = props;
+    const { language, setLanguage } = props;
     const [searchTerm, setSearchTerm] = React.useState("");
     const [ahadith, setAhadith] = React.useState([]);
     const [autoTranslate, setAutoTranslate] = React.useState(false);
 
-    /* This function is mainly for PrayTimePro adhkar reference, it searches based on the q param in the link
-    example: http://discontinuedlabs.github.io/hadithexplorer/?q=search-term */
+    /* This function is mainly made for PrayTimePro adhkar reference, it searches based on the q param in the link
+    example: http://discontinuedlabs.github.io/hadithexplorer/?q=search-term&lang=ar */
     React.useEffect(() => {
         const params = new URLSearchParams(window.location.search);
-        const query = params.get("q");
+        const query = params.get("q") || "";
+        const lang = params.get("lang") || "ar";
         setSearchTerm(query);
+        setLanguage(lang);
+        setAutoTranslate(language === "ar" ? false : true);
     }, []);
 
     React.useEffect(() => {
@@ -41,18 +44,20 @@ export default function HadithSearch(props) {
 
     return (
         <div className="hadith-search">
-            <input
-                type="text"
-                id="search-bar"
-                onChange={(event) => setSearchTerm(event.target.value)}
-            />
-            <button
-                onClick={() => {
-                    document.querySelector("input").value = "";
-                }}
-            >
-                Clear
-            </button>
+            <div className="search-container">
+                <input
+                    type="text"
+                    className="search-bar"
+                    onChange={(event) => setSearchTerm(event.target.value)}
+                />
+                <button
+                    onClick={() => {
+                        document.querySelector("input").value = "";
+                    }}
+                >
+                    C
+                </button>
+            </div>
             {language !== "ar" && (
                 <div>
                     <label htmlFor="translate">Translate</label>
@@ -78,11 +83,12 @@ export default function HadithSearch(props) {
                 ))}
             {ahadith.length > 0 && (
                 <button
+                    className="more-button"
                     onClick={() =>
                         window.open(`https://dorar.net/hadith/search?q=${searchTerm}`, "_blank")
                     }
                 >
-                    More
+                    <b>More</b>
                 </button>
             )}
         </div>

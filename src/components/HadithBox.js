@@ -15,7 +15,6 @@ export default function HadithBox(props) {
                 .then((response) => response.json())
                 .then((data) => {
                     const translatedText = data[0][0][0];
-                    console.log(translatedText);
                     setTranslatedHadith(translatedText);
                 })
                 .catch((error) => console.error(error));
@@ -30,7 +29,6 @@ export default function HadithBox(props) {
                 .then((response) => response.json())
                 .then((data) => {
                     const translatedText = data[0][0][0];
-                    console.log(translatedText);
                     setTranslatedHadithInfo(translatedText);
                 })
                 .catch((error) => console.error(error));
@@ -40,12 +38,14 @@ export default function HadithBox(props) {
     return (
         <div dir={language === "ar" ? "rtl" : "ltr"} className="hadith-box">
             <div className="hadithContainer">
-                <div
-                    dir="rtl" // always rtl
-                    className="hadith"
-                    ref={hadithRef}
-                    dangerouslySetInnerHTML={{ __html: hadith }} // dorar.net api returns results as html elements
-                ></div>
+                <b>
+                    <div
+                        dir="rtl" // always rtl
+                        className="hadith"
+                        ref={hadithRef}
+                        dangerouslySetInnerHTML={{ __html: hadith }} // dorar.net api returns results as html elements
+                    ></div>
+                </b>
                 <div
                     dir="rtl"
                     className="hadith-info"
@@ -55,15 +55,17 @@ export default function HadithBox(props) {
             </div>
 
             {autoTranslate && language !== "ar" && (
-                <div>
-                    <p id="translatedHadith">{translatedHadith}</p>
+                <div class="translation-container">
+                    <b id="translatedHadith">{translatedHadith}</b>
                     <p id="translatedHadithInfo">{translatedHadithInfo}</p>
                 </div>
             )}
 
             <div className="user-note">
                 <input type="text" />
-                <button onClick={handleSaveClick}>Save</button>
+                <button onClick={handleSaveClick}>
+                    <b>Save</b>
+                </button>
             </div>
         </div>
     );
