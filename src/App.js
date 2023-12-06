@@ -11,7 +11,7 @@ export default function App() {
     return (
         <div className="App">
             <header>
-                <img src="" alt="Hadith Explorer logo" />
+                {/* <img src="" alt="Hadith Explorer logo" /> */}
                 <h2>
                     Hadith Explorer <small>beta</small>
                 </h2>

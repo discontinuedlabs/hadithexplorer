@@ -21,20 +21,6 @@ export default function HadithBox(props) {
         }
     }, [autoTranslate, language]);
 
-    React.useEffect(() => {
-        if (hadithRef.current && autoTranslate && language !== "ar") {
-            const text = hadithInfoRef.current.textContent;
-            const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=ar&tl=${language}&dt=t&q=${text}`;
-            fetch(url)
-                .then((response) => response.json())
-                .then((data) => {
-                    const translatedText = data[0][0][0];
-                    setTranslatedHadithInfo(translatedText);
-                })
-                .catch((error) => console.error(error));
-        }
-    }, [autoTranslate, language]);
-
     return (
         <div dir={language === "ar" ? "rtl" : "ltr"} className="hadith-box">
             <div className="hadithContainer">
@@ -55,7 +41,7 @@ export default function HadithBox(props) {
             </div>
 
             {autoTranslate && language !== "ar" && (
-                <div class="translation-container">
+                <div className="translation-container">
                     <b id="translatedHadith">{translatedHadith}</b>
                     <p id="translatedHadithInfo">{translatedHadithInfo}</p>
                 </div>

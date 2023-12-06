@@ -19,24 +19,44 @@ export default function HadithSearch(props) {
         setAutoTranslate(language === "ar" ? false : true);
     }, []);
 
+    // On searchTerm changed
     React.useEffect(() => {
-        if (searchTerm) {
-            fetch(`https://corsproxy.io/?https://dorar.net/dorar_api.json?skey=${searchTerm}`)
-                .then((response) => response.json())
-                .then((data) => {
-                    const parser = new DOMParser();
-                    const doc = parser.parseFromString(data.ahadith.result, "text/html");
-                    const hadithElements = Array.from(doc.querySelectorAll(".hadith"));
-                    const hadithInfoElements = Array.from(doc.querySelectorAll(".hadith-info"));
-                    const ahadithArray = hadithElements.map((hadith, i) => ({
-                        hadith: hadith.innerHTML,
-                        hadithInfo: hadithInfoElements[i]?.innerHTML || "",
-                    }));
-                    setAhadith(ahadithArray);
-                })
-                .catch((error) => console.error(error));
-        }
-    }, [searchTerm]);
+        const fetchData = async () => {
+            if (searchTerm) {
+                if (language === "ar") {
+                    await fetchAhadith(searchTerm);
+                } else {
+                    const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${language}&tl=ar&dt=t&q=${searchTerm}`;
+                    try {
+                        const response = await fetch(url);
+                        const data = await response.json();
+                        const translatedText = data[0][0][0];
+                        await fetchAhadith(translatedText);
+                    } catch (error) {
+                        console.error(error);
+                    }
+                }
+            }
+        };
+        fetchData();
+    }, [searchTerm, language]);
+
+    function fetchAhadith(_searchTerm) {
+        fetch(`https://corsproxy.io/?https://dorar.net/dorar_api.json?skey=${_searchTerm}`)
+            .then((response) => response.json())
+            .then((data) => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(data.ahadith.result, "text/html");
+                const hadithElements = Array.from(doc.querySelectorAll(".hadith"));
+                const hadithInfoElements = Array.from(doc.querySelectorAll(".hadith-info"));
+                const ahadithArray = hadithElements.map((hadith, i) => ({
+                    hadith: hadith.innerHTML,
+                    hadithInfo: hadithInfoElements[i]?.innerHTML || "",
+                }));
+                setAhadith(ahadithArray);
+            })
+            .catch((error) => console.error(error));
+    }
 
     function handleSaveClick() {
         return;
@@ -48,6 +68,7 @@ export default function HadithSearch(props) {
                 <input
                     type="text"
                     className="search-bar"
+                    name="search-bar"
                     onChange={(event) => setSearchTerm(event.target.value)}
                 />
                 <button
