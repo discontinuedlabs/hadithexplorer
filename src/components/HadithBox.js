@@ -1,7 +1,8 @@
 import React from "react";
 
 export default function HadithBox(props) {
-    const { language, hadith, hadithInfo, autoTranslate, handleSaveClick } = props;
+    const { language, hadith, hadithInfo, autoTranslate, handleSaveClick } =
+        props;
     const hadithRef = React.useRef(null);
     const hadithInfoRef = React.useRef(null);
     const [translatedHadith, setTranslatedHadith] = React.useState("");

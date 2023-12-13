@@ -19,36 +19,42 @@ export default function HadithSearch(props) {
         setAutoTranslate(language === "ar" ? false : true);
     }, []);
 
-    // On searchTerm changed
-    React.useEffect(() => {
-        const fetchData = async () => {
-            if (searchTerm) {
-                if (language === "ar") {
-                    await fetchAhadith(searchTerm);
-                } else {
-                    const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${language}&tl=ar&dt=t&q=${searchTerm}`;
-                    try {
-                        const response = await fetch(url);
-                        const data = await response.json();
-                        const translatedText = data[0][0][0];
-                        await fetchAhadith(translatedText);
-                    } catch (error) {
-                        console.error(error);
-                    }
+    async function handleSearch(event) {
+        event.preventDefault();
+        if (searchTerm) {
+            if (language === "ar") {
+                await fetchAhadith(searchTerm);
+            } else {
+                const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${language}&tl=ar&dt=t&q=${searchTerm}`;
+                try {
+                    const response = await fetch(url);
+                    const data = await response.json();
+                    const translatedText = data[0][0][0];
+                    await fetchAhadith(translatedText);
+                } catch (error) {
+                    console.error(error);
                 }
             }
-        };
-        fetchData();
-    }, [searchTerm, language]);
+        }
+    }
 
-    function fetchAhadith(_searchTerm) {
-        fetch(`https://corsproxy.io/?https://dorar.net/dorar_api.json?skey=${_searchTerm}`)
+    function fetchAhadith(term) {
+        fetch(
+            `https://corsproxy.io/?https://dorar.net/dorar_api.json?skey=${term}`
+        )
             .then((response) => response.json())
             .then((data) => {
                 const parser = new DOMParser();
-                const doc = parser.parseFromString(data.ahadith.result, "text/html");
-                const hadithElements = Array.from(doc.querySelectorAll(".hadith"));
-                const hadithInfoElements = Array.from(doc.querySelectorAll(".hadith-info"));
+                const doc = parser.parseFromString(
+                    data.ahadith.result,
+                    "text/html"
+                );
+                const hadithElements = Array.from(
+                    doc.querySelectorAll(".hadith")
+                );
+                const hadithInfoElements = Array.from(
+                    doc.querySelectorAll(".hadith-info")
+                );
                 const ahadithArray = hadithElements.map((hadith, i) => ({
                     hadith: hadith.innerHTML,
                     hadithInfo: hadithInfoElements[i]?.innerHTML || "",
@@ -64,7 +70,7 @@ export default function HadithSearch(props) {
 
     return (
         <div className="hadith-search">
-            <div className="search-container">
+            <form className="search-container" onSubmit={handleSearch}>
                 <input
                     type="text"
                     className="search-bar"
@@ -78,7 +84,8 @@ export default function HadithSearch(props) {
                 >
                     C
                 </button>
-            </div>
+                <input type="submit" value="Search" />
+            </form>
             {language !== "ar" && (
                 <div>
                     <label htmlFor="translate">Translate</label>
@@ -86,7 +93,11 @@ export default function HadithSearch(props) {
                         type="checkbox"
                         name="translate"
                         checked={autoTranslate}
-                        onChange={() => setAutoTranslate((prevAutoTranslate) => !prevAutoTranslate)}
+                        onChange={() =>
+                            setAutoTranslate(
+                                (prevAutoTranslate) => !prevAutoTranslate
+                            )
+                        }
                     />
                 </div>
             )}
@@ -106,7 +117,10 @@ export default function HadithSearch(props) {
                 <button
                     className="more-button"
                     onClick={() =>
-                        window.open(`https://dorar.net/hadith/search?q=${searchTerm}`, "_blank")
+                        window.open(
+                            `https://dorar.net/hadith/search?q=${searchTerm}`,
+                            "_blank"
+                        )
                     }
                 >
                     <b>More</b>
