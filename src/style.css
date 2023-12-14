@@ -1,23 +1,50 @@
+/*---------------- Global ----------------*/
+
 :root {
     --accent-red: #fe1743;
-    --accent-dark-blue: #001743;
+    --bg-main: #1a2032;
+    --bg-second: #293149;
+    --outline-main: #3d4867;
+
+    --border-radius-regular: 20px;
+}
+
+html {
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+    width: 100%;
+}
+
+* {
+    /* outline: white 1px solid; */
+    font-family: "Readex Pro", sans-serif;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    user-select: var(--accent-red);
+    -webkit-tap-highlight-color: transparent;
+}
+
+::selection {
+    background-color: var(--accent-red);
+    color: white;
 }
 
 body {
-    padding: 0;
-    margin: 0;
-    background-color: #f5f5f5;
-    font-family: "Readex Pro", sans-serif;
+    background-color: var(--bg-main);
+    color: white;
 }
+
+/*---------------- Header ----------------*/
 
 header {
     position: fixed;
     width: 100%;
     top: 0;
     left: 0;
-    background-color: #ffffff99;
+    background-image: linear-gradient(var(--bg-main), transparent);
     backdrop-filter: blur(3px);
-    padding-inline: 15px;
+    padding: 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -25,89 +52,20 @@ header {
 }
 
 header select {
-    padding: 10px;
-    height: fit-content;
-    border-radius: 10px;
-    border-color: transparent;
+    all: unset;
+    text-align: center;
+    padding: 10px 20px;
+    border-radius: var(--border-radius-regular);
     background-color: var(--accent-red);
-    color: #fff;
+    color: white;
 }
+
+/*---------------- Hadith search ----------------*/
 
 .hadith-search {
-    padding: 15px;
+    padding: 20px;
     margin: 200px auto 100px auto;
     max-width: 800px;
-}
-
-.hadith-box {
-    padding: 20px 15px;
-    margin-bottom: 15px;
-    outline: 1px solid #eaeaea;
-    border-radius: 10px;
-    background-color: #fff;
-    display: grid;
-    gap: 10px;
-}
-
-.hadith-box .hadith {
-    margin-bottom: 15px;
-}
-
-.hadith-box .search-keys {
-    color: red;
-}
-
-.hadith-box .translation-container {
-    background-color: #dae7ff;
-    padding: 10px;
-    padding-bottom: 1px;
-    border-radius: 10px;
-}
-
-.hadith-box .user-note input[type="text"] {
-    background-color: #fff;
-    border-radius: 10px;
-    border: 2px solid black;
-    padding: 10px;
-    width: 100%;
-    box-sizing: border-box;
-    margin-bottom: 10px;
-}
-
-button {
-    width: 100%;
-    padding: 10px;
-    box-sizing: border-box;
-    border-radius: 10px;
-    background: linear-gradient(#fff, #fff) padding-box,
-        linear-gradient(90deg, var(--accent-red), var(--accent-dark-blue))
-            border-box;
-    border: 3px solid transparent;
-}
-
-button:hover {
-    background: linear-gradient(
-                90deg,
-                var(--accent-red),
-                var(--accent-dark-blue)
-            )
-            border-box,
-        linear-gradient(90deg, var(--accent-red), var(--accent-dark-blue))
-            border-box;
-    border: 3px solid transparent;
-    color: #fff;
-}
-
-button:focus {
-    background: linear-gradient(
-                90deg,
-                var(--accent-red),
-                var(--accent-dark-blue)
-            )
-            padding-box,
-        linear-gradient(black, black) border-box;
-    border: 3px solid transparent;
-    color: #fff;
 }
 
 #search-form {
@@ -116,26 +74,95 @@ button:focus {
     width: 100%;
 }
 
-#search-bar {
+.search-bar-container {
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
     border-radius: 50px;
-    padding: 15px;
+    background-color: var(--bg-second);
+    color: white;
+    padding: 20px;
     width: 100%;
     margin-bottom: 20px;
-    background: linear-gradient(#fff, #fff) padding-box,
-        linear-gradient(90deg, var(--accent-red), var(--accent-dark-blue))
-            border-box;
-    border: 3px solid transparent;
-    box-sizing: border-box;
+    border: 3px solid var(--accent-red);
     font-size: 1.4rem;
+    box-sizing: border-box;
 }
 
-#search-form button {
-    height: 30px;
-    font-size: 1rem;
-    width: 40px;
-    position: absolute;
-    right: 1rem;
-    top: 1rem;
-    border-radius: 50px;
-    background-color: transparent;
+#search-bar,
+#clear-button,
+#search-button {
+    all: unset;
+    color: white;
+}
+
+#search-bar {
+    width: 100%;
+}
+
+.more-button {
+    all: unset;
+    background-color: var(--accent-red);
+    border-radius: var(--border-radius-regular);
+    text-align: center;
+    padding: 20px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/*---------------- Hadith Box ----------------*/
+
+.hadith-box {
+    padding: 20px;
+    margin-bottom: 15px;
+    border: 2px solid var(--outline-main);
+    border-radius: var(--border-radius-regular);
+    background-color: var(--bg-second);
+    display: grid;
+    gap: 20px;
+}
+
+.hadith-box .hadith {
+    margin-bottom: 15px;
+}
+
+.hadith-box .search-keys {
+    color: var(--accent-red);
+}
+
+.hadith-box .translation-container {
+    background-color: #fe174133;
+    border: solid 2px var(--accent-red);
+    padding: 20px;
+    border-radius: var(--border-radius-regular);
+}
+
+/*---------------- User note ----------------*/
+
+.user-note {
+    display: flex;
+    padding: 0;
+    width: 100%;
+}
+
+.user-note * {
+    all: unset;
+    padding: 20px;
+    border: 2px solid #ffd500;
+    box-sizing: border-box;
+}
+
+.note-input {
+    background-color: #ffd50033;
+    border-end-start-radius: var(--border-radius-regular);
+    border-start-start-radius: var(--border-radius-regular);
+    width: 100%;
+}
+
+.note-save {
+    background-color: #ffd500;
+    border-end-end-radius: var(--border-radius-regular);
+    border-start-end-radius: var(--border-radius-regular);
+    text-align: center;
+    color: var(--bg-main);
 }

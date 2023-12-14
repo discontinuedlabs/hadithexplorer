@@ -9,14 +9,25 @@ export default function App() {
     }
 
     return (
-        <div className="App">
+        <div className="app" dir={language === "ar" ? "rtl" : "ltr"}>
             <header>
-                {/* <img src="" alt="Hadith Explorer logo" /> */}
                 <h2>
+                    {/* <img
+                        src={
+                            process.env.PUBLIC_URL +
+                            "/images/favicons/android-chrome-512x512.png"
+                        }
+                        alt="Hadith Explorer logo"
+                        width="50px"
+                    /> */}
                     Hadith Explorer <small>beta</small>
                 </h2>
-                <select name="language-select" value={language} onChange={handleLanguageChange}>
-                    <option value="en">ُEnglish</option>
+                <select
+                    name="language-select"
+                    value={language}
+                    onChange={handleLanguageChange}
+                >
+                    <option value="en">English</option>
                     <option value="ar">عربي</option>
                 </select>
             </header>

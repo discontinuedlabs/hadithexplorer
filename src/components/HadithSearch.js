@@ -4,6 +4,7 @@ import HadithBox from "./HadithBox";
 
 export default function HadithSearch(props) {
     const { language, setLanguage } = props;
+    const [searchBarInput, setSearchBarInput] = React.useState("");
     const [searchTerm, setSearchTerm] = React.useState("");
     const [ahadith, setAhadith] = React.useState([]);
     const [autoTranslate, setAutoTranslate] = React.useState(false);
@@ -14,23 +15,25 @@ export default function HadithSearch(props) {
         const params = new URLSearchParams(window.location.search);
         const query = params.get("q") || "";
         const lang = params.get("lang") || "ar";
-        setSearchTerm(query);
         setLanguage(lang);
         setAutoTranslate(language === "ar");
+        if (query) {
+            setSearchBarInput(query);
+            handleSearch(query);
+        }
     }, []);
 
-    async function handleSearch(event) {
-        event.preventDefault();
-        const _searchTerm = event.target[0].value;
-        setSearchTerm(_searchTerm);
-        if (_searchTerm) {
-            if (language === "ar") fetchAhadith(_searchTerm);
+    async function handleSearch(term) {
+        setSearchTerm(term);
+        if (term) {
+            if (language === "ar") fetchAhadith(term);
             else {
-                const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${language}&tl=ar&dt=t&q=${_searchTerm}`;
+                const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${language}&tl=ar&dt=t&q=${term}`;
                 try {
                     const response = await fetch(url);
                     const data = await response.json();
                     const translatedText = data[0][0][0];
+                    setSearchTerm(translatedText);
                     fetchAhadith(translatedText);
                 } catch (error) {
                     console.error(error);
@@ -71,23 +74,37 @@ export default function HadithSearch(props) {
 
     return (
         <div className="hadith-search">
-            <form id="search-form" onSubmit={handleSearch}>
-                <input type="text" name="search-bar" id="search-bar" />
-                <button
-                    id="clear-button"
-                    name="clear-button"
-                    onClick={() => {
-                        document.querySelector("input").value = "";
-                    }}
-                >
-                    C
-                </button>
-                <input
-                    type="submit"
-                    value="Search"
-                    id="search-button"
-                    name="search-button"
-                />
+            <form
+                id="search-form"
+                onSubmit={(event) => {
+                    event.preventDefault();
+                    handleSearch(searchBarInput);
+                }}
+            >
+                <div className="search-bar-container">
+                    <input
+                        type="text"
+                        name="search-bar"
+                        id="search-bar"
+                        onChange={(event) =>
+                            setSearchBarInput(event.target.value)
+                        }
+                        value={searchBarInput}
+                    />
+                    <button
+                        id="clear-button"
+                        name="clear-button"
+                        onClick={() => {
+                            document.querySelector("input").value = "";
+                        }}
+                    >
+                        C
+                    </button>
+                    <button id="search-button" name="search-button">
+                        S
+                    </button>
+                </div>
+
                 {language !== "ar" && (
                     <div>
                         <label htmlFor="translate" id="translate-label">

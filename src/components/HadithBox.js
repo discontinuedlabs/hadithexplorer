@@ -23,18 +23,16 @@ export default function HadithBox(props) {
     }, [autoTranslate, language]);
 
     return (
-        <div dir={language === "ar" ? "rtl" : "ltr"} className="hadith-box">
-            <div className="hadithContainer">
+        <div className="hadith-box">
+            <div className="hadithContainer" dir="rtl">
                 <b>
                     <div
-                        dir="rtl" // always rtl
                         className="hadith"
                         ref={hadithRef}
                         dangerouslySetInnerHTML={{ __html: hadith }} // dorar.net api returns results as html elements
                     ></div>
                 </b>
                 <div
-                    dir="rtl"
                     className="hadith-info"
                     ref={hadithInfoRef}
                     dangerouslySetInnerHTML={{ __html: hadithInfo }} // dorar.net api returns results as html elements
@@ -49,9 +47,9 @@ export default function HadithBox(props) {
             )}
 
             <div className="user-note">
-                <input type="text" id="note-input" />
+                <input type="text" name="note-input" className="note-input" />
                 <button onClick={handleSaveClick} className="note-save">
-                    <b>Save</b>
+                    S
                 </button>
             </div>
         </div>
