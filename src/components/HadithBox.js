@@ -49,8 +49,8 @@ export default function HadithBox(props) {
             )}
 
             <div className="user-note">
-                <input type="text" />
-                <button onClick={handleSaveClick}>
+                <input type="text" id="note-input" />
+                <button onClick={handleSaveClick} className="note-save">
                     <b>Save</b>
                 </button>
             </div>

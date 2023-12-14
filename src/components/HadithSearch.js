@@ -1,5 +1,5 @@
 import React from "react";
-import { v4 as uuidv4 } from "uuid";
+// import { v4 as uuidv4 } from "uuid";
 import HadithBox from "./HadithBox";
 
 export default function HadithSearch(props) {
@@ -16,21 +16,22 @@ export default function HadithSearch(props) {
         const lang = params.get("lang") || "ar";
         setSearchTerm(query);
         setLanguage(lang);
-        setAutoTranslate(language === "ar" ? false : true);
+        setAutoTranslate(language === "ar");
     }, []);
 
     async function handleSearch(event) {
         event.preventDefault();
-        if (searchTerm) {
-            if (language === "ar") {
-                await fetchAhadith(searchTerm);
-            } else {
-                const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${language}&tl=ar&dt=t&q=${searchTerm}`;
+        const _searchTerm = event.target[0].value;
+        setSearchTerm(_searchTerm);
+        if (_searchTerm) {
+            if (language === "ar") fetchAhadith(_searchTerm);
+            else {
+                const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${language}&tl=ar&dt=t&q=${_searchTerm}`;
                 try {
                     const response = await fetch(url);
                     const data = await response.json();
                     const translatedText = data[0][0][0];
-                    await fetchAhadith(translatedText);
+                    fetchAhadith(translatedText);
                 } catch (error) {
                     console.error(error);
                 }
@@ -70,42 +71,47 @@ export default function HadithSearch(props) {
 
     return (
         <div className="hadith-search">
-            <form className="search-container" onSubmit={handleSearch}>
-                <input
-                    type="text"
-                    className="search-bar"
-                    name="search-bar"
-                    onChange={(event) => setSearchTerm(event.target.value)}
-                />
+            <form id="search-form" onSubmit={handleSearch}>
+                <input type="text" name="search-bar" id="search-bar" />
                 <button
+                    id="clear-button"
+                    name="clear-button"
                     onClick={() => {
                         document.querySelector("input").value = "";
                     }}
                 >
                     C
                 </button>
-                <input type="submit" value="Search" />
+                <input
+                    type="submit"
+                    value="Search"
+                    id="search-button"
+                    name="search-button"
+                />
+                {language !== "ar" && (
+                    <div>
+                        <label htmlFor="translate" id="translate-label">
+                            Translate
+                        </label>
+                        <input
+                            type="checkbox"
+                            name="translate"
+                            id="translate"
+                            checked={autoTranslate}
+                            onChange={() =>
+                                setAutoTranslate(
+                                    (prevAutoTranslate) => !prevAutoTranslate
+                                )
+                            }
+                        />
+                    </div>
+                )}
             </form>
-            {language !== "ar" && (
-                <div>
-                    <label htmlFor="translate">Translate</label>
-                    <input
-                        type="checkbox"
-                        name="translate"
-                        checked={autoTranslate}
-                        onChange={() =>
-                            setAutoTranslate(
-                                (prevAutoTranslate) => !prevAutoTranslate
-                            )
-                        }
-                    />
-                </div>
-            )}
 
             {ahadith.length > 0 &&
                 ahadith.map((item) => (
                     <HadithBox
-                        key={uuidv4()}
+                        key={item.hadithInfo} // hadithInfo is always unique because it has hadith number with more text
                         hadith={item.hadith}
                         hadithInfo={item.hadithInfo}
                         autoTranslate={autoTranslate}
@@ -113,6 +119,7 @@ export default function HadithSearch(props) {
                         handleSaveClick={handleSaveClick}
                     />
                 ))}
+
             {ahadith.length > 0 && (
                 <button
                     className="more-button"
