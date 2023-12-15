@@ -1,8 +1,8 @@
-import React from "react";
+import { useState } from "react";
 import HadithSearch from "./components/HadithSearch";
 
 export default function App() {
-    const [language, setLanguage] = React.useState("en");
+    const [language, setLanguage] = useState("en");
 
     function handleLanguageChange(event) {
         setLanguage(event.target.value);

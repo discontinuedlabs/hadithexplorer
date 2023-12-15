@@ -11,6 +11,9 @@
 
     --border-radius-regular: 1rem;
     --border-radius-large: 5rem;
+
+    --shadow-regular: 0 0.2rem 0.5rem 0.1rem #0000004d;
+    --shadow-small: 0 0.2rem 0.2rem 0.1rem #0000004d;
 }
 
 html {
@@ -21,10 +24,13 @@ html {
 
 * {
     /* outline: white 1px solid; */
-    font-family: "Readex Pro", sans-serif;
+    font-family: "Homemade Apple", cursive;
+    font-family: "Outfit", sans-serif;
+    font-family: "Rubik", sans-serif;
     padding: 0;
     margin: 0;
     box-sizing: border-box;
+    transition: all 0.3s ease-out;
     user-select: var(--accent-red);
     -webkit-tap-highlight-color: transparent;
 }
@@ -47,7 +53,7 @@ header {
     top: 0;
     left: 0;
     background-image: linear-gradient(var(--bg-main), transparent);
-    backdrop-filter: blur(3px);
+    backdrop-filter: blur(0.15rem);
     padding: var(--padding-regular);
     display: flex;
     justify-content: space-between;
@@ -88,7 +94,7 @@ header select {
     padding: var(--padding-regular);
     width: 100%;
     margin-bottom: 1rem;
-    border: 0.3rem solid var(--accent-red);
+    border: 0.2rem solid var(--accent-red);
     font-size: 1.4rem;
     box-sizing: border-box;
 }
@@ -112,6 +118,11 @@ header select {
     padding: var(--padding-regular);
     width: 100%;
     box-sizing: border-box;
+    box-shadow: var(--shadow-small);
+}
+
+.more-button:hover {
+    box-shadow: var(--shadow-regular);
 }
 
 /*---------------- Hadith Box ----------------*/
@@ -124,7 +135,7 @@ header select {
     background-color: var(--bg-second);
     display: grid;
     gap: 1rem;
-    box-shadow: 0 0.4rem 0.5rem 0.1rem #0000004d;
+    box-shadow: var(--shadow-regular);
 }
 
 .hadith-box .hadith {
@@ -142,12 +153,20 @@ header select {
     border-radius: var(--border-radius-regular);
 }
 
+.hadith-box .translated-hadith {
+    margin-bottom: 1rem;
+}
+
 /*---------------- User note ----------------*/
 
 .user-note {
     display: flex;
     padding: 0;
     width: 100%;
+}
+
+.user-note.hidden {
+    display: none;
 }
 
 .user-note * {

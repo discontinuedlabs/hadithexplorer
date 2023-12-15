@@ -1,22 +1,20 @@
-import React from "react";
+import { useState, useEffect } from "react";
 // import { v4 as uuidv4 } from "uuid";
 import HadithBox from "./HadithBox";
 
 export default function HadithSearch(props) {
     const { language, setLanguage } = props;
-    const [searchBarInput, setSearchBarInput] = React.useState("");
-    const [searchTerm, setSearchTerm] = React.useState("");
-    const [ahadith, setAhadith] = React.useState([]);
-    const [autoTranslate, setAutoTranslate] = React.useState(false);
+    const [searchBarInput, setSearchBarInput] = useState("");
+    const [searchTerm, setSearchTerm] = useState("");
+    const [ahadith, setAhadith] = useState([]);
 
     /* This function is mainly made for PrayTimePro adhkar reference, it searches based on the q param in the link
     example: http://discontinuedlabs.github.io/hadithexplorer/?q=search-term&lang=ar */
-    React.useEffect(() => {
+    useEffect(() => {
         const params = new URLSearchParams(window.location.search);
         const query = params.get("q") || "";
         const lang = params.get("lang") || "ar";
         setLanguage(lang);
-        setAutoTranslate(language === "ar");
         if (query) {
             setSearchBarInput(query);
             handleSearch(query);
@@ -104,25 +102,6 @@ export default function HadithSearch(props) {
                         S
                     </button>
                 </div>
-
-                {language !== "ar" && (
-                    <div>
-                        <label htmlFor="translate" id="translate-label">
-                            Translate
-                        </label>
-                        <input
-                            type="checkbox"
-                            name="translate"
-                            id="translate"
-                            checked={autoTranslate}
-                            onChange={() =>
-                                setAutoTranslate(
-                                    (prevAutoTranslate) => !prevAutoTranslate
-                                )
-                            }
-                        />
-                    </div>
-                )}
             </form>
 
             {ahadith.length > 0 &&
@@ -131,7 +110,6 @@ export default function HadithSearch(props) {
                         key={item.hadithInfo} // hadithInfo is always unique because it has hadith number with more text
                         hadith={item.hadith}
                         hadithInfo={item.hadithInfo}
-                        autoTranslate={autoTranslate}
                         language={language}
                         handleSaveClick={handleSaveClick}
                     />
