@@ -6,7 +6,11 @@
     --bg-second: #293149;
     --outline-main: #3d4867;
 
-    --border-radius-regular: 20px;
+    --padding-regular: 1.2rem;
+    --padding-small: 0.6rem;
+
+    --border-radius-regular: 1.2rem;
+    --border-radius-large: 6rem;
 }
 
 html {
@@ -44,7 +48,7 @@ header {
     left: 0;
     background-image: linear-gradient(var(--bg-main), transparent);
     backdrop-filter: blur(3px);
-    padding: 20px;
+    padding: var(--padding-regular);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -54,7 +58,7 @@ header {
 header select {
     all: unset;
     text-align: center;
-    padding: 10px 20px;
+    padding: var(--padding-small) var(--padding-regular);
     border-radius: var(--border-radius-regular);
     background-color: var(--accent-red);
     color: white;
@@ -63,9 +67,9 @@ header select {
 /*---------------- Hadith search ----------------*/
 
 .hadith-search {
-    padding: 20px;
-    margin: 200px auto 100px auto;
-    max-width: 800px;
+    padding: var(--padding-regular);
+    margin: 12rem auto 6rem auto;
+    max-width: 50rem;
 }
 
 #search-form {
@@ -78,13 +82,13 @@ header select {
     display: flex;
     justify-content: space-between;
     align-content: center;
-    border-radius: 50px;
+    border-radius: var(--border-radius-large);
     background-color: var(--bg-second);
     color: white;
-    padding: 20px;
+    padding: var(--padding-regular);
     width: 100%;
-    margin-bottom: 20px;
-    border: 3px solid var(--accent-red);
+    margin-bottom: 1.2rem;
+    border: 0.3rem solid var(--accent-red);
     font-size: 1.4rem;
     box-sizing: border-box;
 }
@@ -105,7 +109,7 @@ header select {
     background-color: var(--accent-red);
     border-radius: var(--border-radius-regular);
     text-align: center;
-    padding: 20px;
+    padding: var(--padding-regular);
     width: 100%;
     box-sizing: border-box;
 }
@@ -113,17 +117,18 @@ header select {
 /*---------------- Hadith Box ----------------*/
 
 .hadith-box {
-    padding: 20px;
-    margin-bottom: 15px;
-    border: 2px solid var(--outline-main);
+    padding: var(--padding-regular);
+    margin-bottom: 1.2rem;
+    border: 0.1rem solid var(--outline-main);
     border-radius: var(--border-radius-regular);
     background-color: var(--bg-second);
     display: grid;
-    gap: 20px;
+    gap: 1.2rem;
+    box-shadow: 0 0.4rem 0.5rem 0.1rem #0000004d;
 }
 
 .hadith-box .hadith {
-    margin-bottom: 15px;
+    margin-bottom: 1.2rem;
 }
 
 .hadith-box .search-keys {
@@ -132,8 +137,8 @@ header select {
 
 .hadith-box .translation-container {
     background-color: #fe174133;
-    border: solid 2px var(--accent-red);
-    padding: 20px;
+    border: 0.1rem solid var(--accent-red);
+    padding: var(--padding-regular);
     border-radius: var(--border-radius-regular);
 }
 
@@ -147,8 +152,8 @@ header select {
 
 .user-note * {
     all: unset;
-    padding: 20px;
-    border: 2px solid #ffd500;
+    padding: var(--padding-regular);
+    border: 0.1rem solid #ffd500;
     box-sizing: border-box;
 }
 
