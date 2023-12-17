@@ -89,15 +89,15 @@ export default function HadithSearch(props) {
                         }
                         value={searchBarInput}
                     />
-                    <button
+                    {/* <button
                         id="clear-button"
                         name="clear-button"
                         onClick={() => {
-                            document.querySelector("input").value = "";
+                            setSearchBarInput("");
                         }}
                     >
                         C
-                    </button>
+                    </button> */}
                     <button id="search-button" name="search-button">
                         S
                     </button>

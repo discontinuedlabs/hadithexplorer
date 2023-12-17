@@ -2,9 +2,9 @@
 
 :root {
     --accent-red: #fe1743;
-    --bg-main: #1a2032;
-    --bg-second: #293149;
-    --outline-main: #3d4867;
+    --bg-main: #1a1d26;
+    --bg-second: #2d313d;
+    --outline-main: #4a4f5f;
 
     --padding-regular: 1rem;
     --padding-small: 0.6rem;
@@ -100,7 +100,6 @@ header select {
 }
 
 #search-bar,
-#clear-button,
 #search-button {
     all: unset;
     color: white;
