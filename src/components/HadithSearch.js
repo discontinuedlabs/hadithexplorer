@@ -66,10 +66,6 @@ export default function HadithSearch(props) {
             .catch((error) => console.error(error));
     }
 
-    function handleSaveClick() {
-        return;
-    }
-
     return (
         <div className="hadith-search">
             <form
@@ -98,7 +94,11 @@ export default function HadithSearch(props) {
                     >
                         C
                     </button> */}
-                    <button id="search-button" name="search-button">
+                    <button
+                        type="submit"
+                        id="search-button"
+                        name="search-button"
+                    >
                         S
                     </button>
                 </div>
@@ -111,7 +111,6 @@ export default function HadithSearch(props) {
                         hadith={item.hadith}
                         hadithInfo={item.hadithInfo}
                         language={language}
-                        handleSaveClick={handleSaveClick}
                     />
                 ))}
 

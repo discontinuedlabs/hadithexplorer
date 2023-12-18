@@ -4,10 +4,6 @@ import HadithSearch from "./components/HadithSearch";
 export default function App() {
     const [language, setLanguage] = useState("en");
 
-    function handleLanguageChange(event) {
-        setLanguage(event.target.value);
-    }
-
     return (
         <div className="app" dir={language === "ar" ? "rtl" : "ltr"}>
             <header>
@@ -25,7 +21,7 @@ export default function App() {
                 <select
                     name="language-select"
                     value={language}
-                    onChange={handleLanguageChange}
+                    onChange={(event) => setLanguage(event.target.value)}
                 >
                     <option value="en">English</option>
                     <option value="ar">عربي</option>

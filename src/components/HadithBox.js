@@ -1,8 +1,10 @@
 import { useState, useEffect, useRef } from "react";
 
 export default function HadithBox(props) {
-    const { language, hadithInfo, handleSaveClick } = props;
+    const { language, hadithInfo } = props;
     const hadithRef = useRef(null);
+    const noteTextareaRef = useRef(null);
+    const userNoteRef = useRef(null);
     const [hadith, setHadith] = useState({
         content: "",
         narrator: "",
@@ -19,36 +21,51 @@ export default function HadithBox(props) {
         number: "",
         ruling: "",
     });
+    const [hadithStyle, setHadithStyle] = useState({
+        withDiacritics: "",
+        withoutDiacritics: "",
+        diacritized: true,
+    });
+
+    useEffect(() => {
+        setHadithStyle({
+            withDiacritics: props.hadith,
+            withoutDiacritics: props.hadith
+                .normalize("NFD")
+                .replace(/[\u064B-\u0655\u0670]/g, ""), // FIXME: THIS REMOVED HAMZAH
+            diacritized: true,
+        });
+    }, [props.hadith]);
 
     // Distribute hadith and hadithInfo into hadith state object
     useEffect(() => {
         let splitHadithInfo = hadithInfo
-            .replace(/<span class="info-subtitle">(.*?)<\/span>/g, "|")
-            .replace(/\n|<span>|<\/span>/g, "")
-            .split("|")
-            .filter((value) => value.trim() !== "");
+            .replace(/<span class="info-subtitle">(.*?)<\/span>/g, "|") // Remove the span elements because they are fixed in hadith-info div
+            .replace(/\n|<span>|<\/span>/g, "") // Ruling part has its own extra span tag
+            .split("|") // Split them into an array
+            .filter((value) => value.trim() !== ""); // Remove the extra empty value in the array
         setHadith({
-            content: props.hadith,
+            content: hadithStyle.diacritized
+                ? hadithStyle.withDiacritics
+                : hadithStyle.withoutDiacritics, // These are stringified html elements
             narrator: splitHadithInfo[0],
             compiler: splitHadithInfo[1],
             source: splitHadithInfo[2],
             number: splitHadithInfo[3],
             ruling: splitHadithInfo[4],
         });
-    }, [props.hadith, hadithInfo]);
+    }, [hadithStyle, hadithInfo]);
 
     useEffect(() => {
         if (hadithRef.current && language !== "ar") {
-            let splitHadithInfo = hadithInfo
-                .replace(/<span class="info-subtitle">(.*?)<\/span>/g, "|")
-                .replace(/\n|<span>|<\/span>/g, "")
-                .split("|")
-                .filter((value) => value.trim() !== "");
-
             const combinedText = [
-                hadithRef.current.textContent,
-                ...splitHadithInfo,
-            ].join("$||"); // Translate API sometimes removed "|" or "||"
+                hadithRef.current.textContent, // Don't use hadith.content or hadithStyle values because they stringified html elements
+                hadith.narrator,
+                hadith.compiler,
+                hadith.source,
+                hadith.number,
+                hadith.ruling,
+            ].join("$||"); // Translate API sometimes removes the single ot doubled vertical line "|" without adding the dollar sign
 
             const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=ar&tl=${language}&dt=t&q=${combinedText}`;
             fetch(url)
@@ -60,19 +77,77 @@ export default function HadithBox(props) {
                         translatedText += data[0][i][0];
                     }
 
-                    // is this correct??? after this line
-                    const splitTranslatedHadith = translatedText.split("$||"); // Translate API sometimes removed "|" or "||"
-                    const keys = Object.keys(translatedHadith);
-                    for (let i = 0; i < keys.length; i++) {
-                        translatedHadith[keys[i]] = splitTranslatedHadith[i];
-                    }
-                    console.log(translatedHadith);
-                    setTranslatedHadith(translatedHadith);
-                    // is this correct??? before this line
+                    // // Distribute hadith and hadithInfo into TranslatedHadith state object
+                    const splitTranslatedHadith = translatedText.split("$||");
+                    setTranslatedHadith({
+                        content: splitTranslatedHadith[0] || (
+                            <span className="error-message">
+                                An error occured!
+                            </span>
+                        ),
+                        narrator: splitTranslatedHadith[1] || (
+                            <span className="error-message">
+                                An error occured!
+                            </span>
+                        ),
+                        compiler: splitTranslatedHadith[2] || (
+                            <span className="error-message">
+                                An error occured!
+                            </span>
+                        ),
+                        source: splitTranslatedHadith[3] || (
+                            <span className="error-message">
+                                An error occured!
+                            </span>
+                        ),
+                        number: splitTranslatedHadith[4] || (
+                            <span className="error-message">
+                                An error occured!
+                            </span>
+                        ),
+                        ruling: splitTranslatedHadith[5] || (
+                            <span className="error-message">
+                                An error occured!
+                            </span>
+                        ),
+                    });
                 })
                 .catch((error) => console.error(error));
         }
     }, [language, hadith]);
+
+    function adjustTextareaHeight(event) {
+        event.target.style.height = "auto";
+        event.target.style.height = event.target.scrollHeight + "px";
+    }
+
+    function handleBookmark() {
+        userNoteRef.current.classList.toggle("hidden");
+    }
+
+    function handleCopy(event) {
+        const type1 = "text/plain";
+        const blob1 = new Blob([hadithRef.current.textContent], {
+            type: type1,
+        });
+        const item1 = new ClipboardItem({ [type1]: blob1 });
+
+        const type2 = "text/html";
+        const blob2 = new Blob(
+            ["<p>" + hadithRef.current.textContent + "</p>"],
+            { type: type2 }
+        );
+        const item2 = new ClipboardItem({ [type2]: blob2 });
+
+        navigator.clipboard.write([item1, item2]);
+    }
+
+    function handleDiacritics() {
+        setHadithStyle((prevHadithStyle) => ({
+            ...prevHadithStyle,
+            diacritized: !prevHadithStyle.diacritized,
+        }));
+    }
 
     return (
         <div className="hadith-box">
@@ -105,35 +180,56 @@ export default function HadithBox(props) {
                 <div className="translation-container">
                     <b>
                         <div className="translated-hadith">
-                            {translatedHadith.content || ""}
+                            {translatedHadith.content || "Translating..."}
                         </div>
                     </b>
                     <div className="translated-hadith-info">
                         <p className="translated-hadith-narrator">
-                            Narrator: {translatedHadith.narrator || ""}
+                            Narrator:{" "}
+                            {translatedHadith.narrator || "Translating..."}
                         </p>
                         <p className="translated-hadith-compiler">
-                            Compiler: {translatedHadith.compiler || ""}
+                            Compiler:{" "}
+                            {translatedHadith.compiler || "Translating..."}
                         </p>
                         <p className="translated-hadith-source">
-                            Source: {translatedHadith.source || ""}
+                            Source:{" "}
+                            {translatedHadith.source || "Translating..."}
                         </p>
                         <p className="translated-hadith-number">
-                            Page or number: {translatedHadith.number || ""}
+                            Page or number:{" "}
+                            {translatedHadith.number || "Translating..."}
                         </p>
                         <p className="translated-hadith-ruling">
                             Summary of the Hadith's ruling:{" "}
-                            {translatedHadith.ruling || ""}
+                            {translatedHadith.ruling || "Translating..."}
                         </p>
                     </div>
                 </div>
             )}
 
-            <div className="user-note hidden">
-                <input type="text" name="note-input" className="note-input" />
-                <button onClick={handleSaveClick} className="note-save">
-                    S
+            <div className="options-container">
+                <button className="option" onClick={handleCopy}>
+                    C
                 </button>
+                <button className="option" onClick={handleBookmark}>
+                    B
+                </button>
+                <button className="option" onClick={handleDiacritics}>
+                    D
+                </button>
+            </div>
+
+            <div className="user-note hidden" ref={userNoteRef}>
+                <textarea
+                    placeholder="Type your note here"
+                    rows={1}
+                    name="note-textarea"
+                    className="note-textarea"
+                    ref={noteTextareaRef}
+                    onChange={adjustTextareaHeight}
+                />
+                <button className="note-save">S</button>
             </div>
         </div>
     );
