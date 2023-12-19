@@ -26,14 +26,15 @@ export default function HadithBox(props) {
         withoutDiacritics: "",
         diacritized: true,
     });
+    const [translationState, setTranslationState] = useState("");
 
     useEffect(() => {
         setHadithStyle({
             withDiacritics: props.hadith,
             withoutDiacritics: props.hadith
                 .normalize("NFD")
-                .replace(/[\u064B-\u0655\u0670]/g, ""), // FIXME: THIS REMOVED HAMZAH
-            diacritized: true,
+                .replace(/[\u064B-\u0652\u0670]/g, ""), // u0652 instead of u0655 to preserve Hamza in Alif
+            diacritized: true, // Always show the original diacritized style on fetch
         });
     }, [props.hadith]);
 
@@ -58,61 +59,43 @@ export default function HadithBox(props) {
 
     useEffect(() => {
         if (hadithRef.current && language !== "ar") {
+            setTranslationState("Translating...");
+
             const combinedText = [
-                hadithRef.current.textContent, // Don't use hadith.content or hadithStyle values because they stringified html elements
+                hadithRef.current.textContent, // Don't use hadith.content or hadithStyle values because they are stringified html elements
                 hadith.narrator,
                 hadith.compiler,
                 hadith.source,
                 hadith.number,
                 hadith.ruling,
-            ].join("$||"); // Translate API sometimes removes the single ot doubled vertical line "|" without adding the dollar sign
+            ].join("|||||"); // Translate API sometimes removes the single or doubled vertical line
 
             const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=ar&tl=${language}&dt=t&q=${combinedText}`;
             fetch(url)
                 .then((response) => response.json())
                 .then((data) => {
+                    setTranslationState(null);
                     // translated text gets devided into multiple arrays based on its size
                     let translatedText = "";
                     for (let i = 0; i < data[0].length; i++) {
                         translatedText += data[0][i][0];
                     }
 
-                    // // Distribute hadith and hadithInfo into TranslatedHadith state object
-                    const splitTranslatedHadith = translatedText.split("$||");
+                    // Distribute hadith and hadithInfo into TranslatedHadith state object
+                    const splitTranslatedHadith = translatedText.split("|||||");
                     setTranslatedHadith({
-                        content: splitTranslatedHadith[0] || (
-                            <span className="error-message">
-                                An error occured!
-                            </span>
-                        ),
-                        narrator: splitTranslatedHadith[1] || (
-                            <span className="error-message">
-                                An error occured!
-                            </span>
-                        ),
-                        compiler: splitTranslatedHadith[2] || (
-                            <span className="error-message">
-                                An error occured!
-                            </span>
-                        ),
-                        source: splitTranslatedHadith[3] || (
-                            <span className="error-message">
-                                An error occured!
-                            </span>
-                        ),
-                        number: splitTranslatedHadith[4] || (
-                            <span className="error-message">
-                                An error occured!
-                            </span>
-                        ),
-                        ruling: splitTranslatedHadith[5] || (
-                            <span className="error-message">
-                                An error occured!
-                            </span>
-                        ),
+                        content: splitTranslatedHadith[0],
+                        narrator: splitTranslatedHadith[1],
+                        compiler: splitTranslatedHadith[2],
+                        source: splitTranslatedHadith[3],
+                        number: splitTranslatedHadith[4],
+                        ruling: splitTranslatedHadith[5],
                     });
                 })
-                .catch((error) => console.error(error));
+                .catch((error) => {
+                    setTranslationState("Failed to translate element.");
+                    console.error(error);
+                });
         }
     }, [language, hadith]);
 
@@ -178,47 +161,35 @@ export default function HadithBox(props) {
 
             {language !== "ar" && (
                 <div className="translation-container">
-                    <b>
-                        <div className="translated-hadith">
-                            {translatedHadith.content || "Translating..."}
-                        </div>
-                    </b>
-                    <div className="translated-hadith-info">
-                        <p className="translated-hadith-narrator">
-                            Narrator:{" "}
-                            {translatedHadith.narrator || "Translating..."}
-                        </p>
-                        <p className="translated-hadith-compiler">
-                            Compiler:{" "}
-                            {translatedHadith.compiler || "Translating..."}
-                        </p>
-                        <p className="translated-hadith-source">
-                            Source:{" "}
-                            {translatedHadith.source || "Translating..."}
-                        </p>
-                        <p className="translated-hadith-number">
-                            Page or number:{" "}
-                            {translatedHadith.number || "Translating..."}
-                        </p>
-                        <p className="translated-hadith-ruling">
-                            Summary of the Hadith's ruling:{" "}
-                            {translatedHadith.ruling || "Translating..."}
-                        </p>
-                    </div>
+                    {<p>{translationState}</p> || (
+                        <>
+                            <b>
+                                <div className="translated-hadith">
+                                    {translatedHadith.content}
+                                </div>
+                            </b>
+                            <div className="translated-hadith-info">
+                                <p className="translated-hadith-narrator">
+                                    Narrator: {translatedHadith.narrator}
+                                </p>
+                                <p className="translated-hadith-compiler">
+                                    Compiler: {translatedHadith.compiler}
+                                </p>
+                                <p className="translated-hadith-source">
+                                    Source: {translatedHadith.source}
+                                </p>
+                                <p className="translated-hadith-number">
+                                    Page or number: {translatedHadith.number}
+                                </p>
+                                <p className="translated-hadith-ruling">
+                                    Summary of the Hadith's ruling:{" "}
+                                    {translatedHadith.ruling}
+                                </p>
+                            </div>
+                        </>
+                    )}
                 </div>
             )}
-
-            <div className="options-container">
-                <button className="option" onClick={handleCopy}>
-                    C
-                </button>
-                <button className="option" onClick={handleBookmark}>
-                    B
-                </button>
-                <button className="option" onClick={handleDiacritics}>
-                    D
-                </button>
-            </div>
 
             <div className="user-note hidden" ref={userNoteRef}>
                 <textarea
@@ -230,6 +201,18 @@ export default function HadithBox(props) {
                     onChange={adjustTextareaHeight}
                 />
                 <button className="note-save">S</button>
+            </div>
+
+            <div className="options-container">
+                <button className="option" onClick={handleCopy}>
+                    C
+                </button>
+                <button className="option" onClick={handleBookmark}>
+                    B
+                </button>
+                <button className="option" onClick={handleDiacritics}>
+                    D
+                </button>
             </div>
         </div>
     );

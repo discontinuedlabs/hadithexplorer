@@ -13,7 +13,7 @@ export default function HadithSearch(props) {
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
         const query = params.get("q") || "";
-        const lang = params.get("lang") || "ar";
+        const lang = params.get("lang") || "en";
         setLanguage(lang);
         if (query) {
             setSearchBarInput(query);
@@ -22,7 +22,7 @@ export default function HadithSearch(props) {
     }, []);
 
     async function handleSearch(term) {
-        setSearchTerm(term);
+        // setSearchTerm(term);
         if (term) {
             if (language === "ar") fetchAhadith(term);
             else {
@@ -85,15 +85,6 @@ export default function HadithSearch(props) {
                         }
                         value={searchBarInput}
                     />
-                    {/* <button
-                        id="clear-button"
-                        name="clear-button"
-                        onClick={() => {
-                            setSearchBarInput("");
-                        }}
-                    >
-                        C
-                    </button> */}
                     <button
                         type="submit"
                         id="search-button"
