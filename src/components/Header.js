@@ -12,7 +12,7 @@ export default function Header(props) {
                         alt="Hadith Explorer logo"
                         width="50px"
                     /> */}
-                    Hadith Explorer
+                    HadithExplorer
                 </h2>
             </a>
             <select

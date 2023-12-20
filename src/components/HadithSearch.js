@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 // import { v4 as uuidv4 } from "uuid";
 import HadithBox from "./HadithBox";
 
@@ -13,11 +13,11 @@ export default function HadithSearch(props) {
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
         const query = params.get("q") || "";
-        const lang = params.get("lang") || "en";
-        setLanguage(lang);
+        const lang = params.get("lang");
         if (query) {
             setSearchBarInput(query);
             handleSearch(query);
+            setLanguage(lang || "en");
         }
     }, []);
 
@@ -41,22 +41,13 @@ export default function HadithSearch(props) {
     }
 
     function fetchAhadith(term) {
-        fetch(
-            `https://corsproxy.io/?https://dorar.net/dorar_api.json?skey=${term}`
-        )
+        fetch(`https://corsproxy.io/?https://dorar.net/dorar_api.json?skey=${term}`)
             .then((response) => response.json())
             .then((data) => {
                 const parser = new DOMParser();
-                const doc = parser.parseFromString(
-                    data.ahadith.result,
-                    "text/html"
-                );
-                const hadithElements = Array.from(
-                    doc.querySelectorAll(".hadith")
-                );
-                const hadithInfoElements = Array.from(
-                    doc.querySelectorAll(".hadith-info")
-                );
+                const doc = parser.parseFromString(data.ahadith.result, "text/html");
+                const hadithElements = Array.from(doc.querySelectorAll(".hadith"));
+                const hadithInfoElements = Array.from(doc.querySelectorAll(".hadith-info"));
                 const ahadithArray = hadithElements.map((hadith, i) => ({
                     hadith: hadith.innerHTML,
                     hadithInfo: hadithInfoElements[i]?.innerHTML || "",
@@ -80,16 +71,10 @@ export default function HadithSearch(props) {
                         type="text"
                         name="search-bar"
                         id="search-bar"
-                        onChange={(event) =>
-                            setSearchBarInput(event.target.value)
-                        }
+                        onChange={(event) => setSearchBarInput(event.target.value)}
                         value={searchBarInput}
                     />
-                    <button
-                        type="submit"
-                        id="search-button"
-                        name="search-button"
-                    >
+                    <button type="submit" id="search-button" name="search-button">
                         S
                     </button>
                 </div>
@@ -109,10 +94,7 @@ export default function HadithSearch(props) {
                 <button
                     className="more-button"
                     onClick={() =>
-                        window.open(
-                            `https://dorar.net/hadith/search?q=${searchTerm}`,
-                            "_blank"
-                        )
+                        window.open(`https://dorar.net/hadith/search?q=${searchTerm}`, "_blank")
                     }
                 >
                     <b>More</b>
