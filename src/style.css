@@ -4,7 +4,7 @@
     --accent-red: #fe1743;
     --bg-main: #1a1d26;
     --bg-second: #2d313d;
-    --outline-main: #4a4f5f;
+    --outline-main: #6a7086;
 
     --padding-regular: 1rem;
     --padding-small: 0.6rem;
@@ -48,6 +48,21 @@ body {
     background-color: var(--accent-red);
     padding: 0.1rem 0.5rem;
     border-radius: var(--border-radius-regular);
+}
+
+button {
+    all: unset;
+    background-color: transparent;
+    height: 1rem;
+    padding: 0.1rem 0.5rem;
+}
+
+button:hover {
+    color: var(--outline-main);
+}
+
+button.pressed {
+    color: var(--accent-red);
 }
 
 /*---------------- Header ----------------*/
@@ -141,9 +156,14 @@ header a {
     border: 0.1rem solid var(--outline-main);
     border-radius: var(--border-radius-regular);
     background-color: var(--bg-second);
+    box-shadow: var(--shadow-regular);
     display: grid;
     gap: 1rem;
-    box-shadow: var(--shadow-regular);
+}
+
+.content-type {
+    display: grid;
+    gap: 1rem;
 }
 
 .hadith {

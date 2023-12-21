@@ -135,13 +135,13 @@ export default function HadithByKeyword(props) {
     }
 
     return (
-        <div className="hadith-by-keyword">
+        <div className="hadith-by-keyword content-type">
             <div className="hadith-container" dir="rtl">
                 <b>
                     <div
                         className="hadith"
                         ref={hadithRef}
-                        // dorar.net api returns results as html elements
+                        // dorar.net api returns results as stringified html elements
                         dangerouslySetInnerHTML={{
                             __html: hadith.content.slice(4), // Remove the list numbers
                         }}

@@ -1,6 +1,8 @@
 import { useState, useEffect, useMemo } from "react";
 // import { v4 as uuidv4 } from "uuid";
 import HadithBox from "./HadithBox";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 
 export default function HadithSearch(props) {
     const { language, setLanguage } = props;
@@ -75,7 +77,7 @@ export default function HadithSearch(props) {
                         value={searchBarInput}
                     />
                     <button type="submit" id="search-button" name="search-button">
-                        S
+                        <FontAwesomeIcon icon={faMagnifyingGlass} />
                     </button>
                 </div>
             </form>

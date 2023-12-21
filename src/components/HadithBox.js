@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import HadithByKeyword from "./HadithByKeyword";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFeather, faCopy, faCheck, faBookmark } from "@fortawesome/free-solid-svg-icons";
 
 export default function HadithBox(props) {
     const contentTypeRef = useRef(null);
@@ -28,9 +30,7 @@ export default function HadithBox(props) {
 
     return (
         <div className="hadith-box">
-            <div ref={contentTypeRef}>
-                <HadithByKeyword {...props} />
-            </div>
+            <HadithByKeyword {...props} ref={contentTypeRef} />
 
             <div className="user-note hidden" ref={userNoteRef}>
                 <textarea
@@ -41,21 +41,25 @@ export default function HadithBox(props) {
                     ref={noteTextareaRef}
                     onChange={adjustTextareaHeight}
                 />
-                <button className="note-save">S</button>
+                <button className="note-save">
+                    <FontAwesomeIcon icon={faCheck} />
+                </button>
             </div>
 
             <div className="options-container">
                 <button className="option" onClick={handleCopy}>
-                    C
+                    <FontAwesomeIcon icon={faCopy} />
                 </button>
                 <button className="option" onClick={handleBookmark}>
-                    B
+                    <FontAwesomeIcon icon={faBookmark} />
                 </button>
                 <button
-                    className="option"
-                    onClick={() => contentTypeRef.current.handleDiacritics()}
+                    className={`option ${
+                        contentTypeRef.current?.hadithStyle.diacritized ? "pressed" : ""
+                    }`}
+                    onClick={() => contentTypeRef.current?.handleDiacritics()}
                 >
-                    D
+                    <FontAwesomeIcon icon={faFeather} />
                 </button>
             </div>
         </div>
