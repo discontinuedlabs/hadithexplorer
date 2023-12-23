@@ -2,7 +2,6 @@
 const { GenerateSW } = require("workbox-webpack-plugin");
 
 module.exports = {
-    // Other webpack configurations...
     plugins: [
         new GenerateSW({
             // These options encourage the ServiceWorkers to get in there fast,
@@ -10,6 +9,5 @@ module.exports = {
             clientsClaim: true,
             skipWaiting: true,
         }),
-        // Other plugins...
     ],
 };
