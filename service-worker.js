@@ -1,8 +1,9 @@
-// public/service-worker.js
 import { precacheAndRoute } from "workbox-precaching";
 
 const cacheData = "mainCache";
-this.addEventListener("install", (event) => {
+
+// eslint-disable-next-line no-restricted-globals
+self.addEventListener("install", (event) => {
     event.waitUntil(
         caches.open(cacheData).then((cache) => {
             cache.addAll([
@@ -16,7 +17,8 @@ this.addEventListener("install", (event) => {
     );
 });
 
-this.addEventListener("fetch", (event) => {
+// eslint-disable-next-line no-restricted-globals
+self.addEventListener("fetch", (event) => {
     event.respondWith(
         caches.match(event.request).then((cachedResponse) => {
             if (cachedResponse) {
@@ -37,4 +39,5 @@ this.addEventListener("fetch", (event) => {
     );
 });
 
+// eslint-disable-next-line no-restricted-globals
 precacheAndRoute(self.__WB_MANIFEST);
