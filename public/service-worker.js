@@ -36,4 +36,4 @@ this.addEventListener("fetch", (event) => {
     );
 });
 
-precacheAndRoute(this.__WB_MANIFEST);
+precacheAndRoute(self.__WB_MANIFEST);
