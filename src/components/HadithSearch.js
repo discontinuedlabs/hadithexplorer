@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 // import { v4 as uuidv4 } from "uuid";
 import HadithBox from "./HadithBox";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -60,7 +60,12 @@ export default function HadithSearch(props) {
     }
 
     return (
-        <div className="hadith-search">
+        <div
+            className="hadith-search"
+            style={{
+                marginTop: ahadith.length > 0 ? "5rem" : "",
+            }}
+        >
             <form
                 id="search-form"
                 onSubmit={(event) => {
@@ -73,6 +78,7 @@ export default function HadithSearch(props) {
                         type="text"
                         name="search-bar"
                         id="search-bar"
+                        placeholder="Search Hadiths..."
                         onChange={(event) => setSearchBarInput(event.target.value)}
                         value={searchBarInput}
                     />
@@ -91,6 +97,10 @@ export default function HadithSearch(props) {
                         language={language}
                     />
                 ))}
+
+            {ahadith.length === 0 && (
+                <p className="empty-label">Begin by entering keywords to explore Hadiths</p>
+            )}
 
             {ahadith.length > 0 && (
                 <button

@@ -3,20 +3,10 @@ export default function Header(props) {
     return (
         <header>
             <a href=".">
-                <h2>
-                    {/* <img
-                        src={
-                            process.env.PUBLIC_URL +
-                            "/images/favicons/android-chrome-512x512.png"
-                        }
-                        alt="Hadith Explorer logo"
-                        width="50px"
-                    /> */}
-                    HadithExplorer
-                </h2>
+                <h2 className="title">HadithExplorer</h2>
             </a>
             <select
-                name="language-select"
+                className="language-select"
                 value={language}
                 onChange={(event) => setLanguage(event.target.value)}
             >

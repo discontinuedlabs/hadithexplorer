@@ -2,9 +2,13 @@
 
 :root {
     --accent-red: #fe1743;
+    --accent-red-dark: #9d0a25;
     --bg-main: #1a1d26;
     --bg-second: #2d313d;
     --outline-main: #6a7086;
+
+    --yellow-regular: #ffd500;
+    --yellow-dark: #bc9c00;
 
     --padding-regular: 1rem;
     --padding-small: 0.6rem;
@@ -34,6 +38,10 @@ html {
     -webkit-tap-highlight-color: transparent;
 }
 
+*:focus-visible {
+    border: solid white 0.3rem;
+}
+
 ::selection {
     background-color: var(--accent-red);
     color: white;
@@ -44,17 +52,12 @@ body {
     color: white;
 }
 
-.error-message {
-    background-color: var(--accent-red);
-    padding: 0.1rem 0.5rem;
-    border-radius: var(--border-radius-regular);
-}
-
 button {
     all: unset;
     background-color: transparent;
     height: 1rem;
     padding: 0.1rem 0.5rem;
+    transition: var(--transition-regular);
 }
 
 button:hover {
@@ -63,6 +66,10 @@ button:hover {
 
 button.pressed {
     color: var(--accent-red);
+}
+
+button.pressed:hover {
+    color: var(--accent-red-dark);
 }
 
 /*---------------- Header ----------------*/
@@ -81,13 +88,25 @@ header {
     z-index: 10;
 }
 
-header select {
+.title {
+    font-weight: normal;
+    font-family: "DM Serif Display", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+}
+
+.language-select {
     all: unset;
     text-align: center;
     padding: var(--padding-small) var(--padding-regular);
     border-radius: var(--border-radius-regular);
+    border: 0.1rem solid var(--accent-red);
     background-color: var(--accent-red);
     color: white;
+    transition: var(--transition-regular);
+}
+
+.language-select:hover {
+    background-color: var(--accent-red-dark);
 }
 
 header a {
@@ -98,8 +117,9 @@ header a {
 
 .hadith-search {
     padding: var(--padding-regular);
-    margin: 12rem auto 6rem auto;
+    margin: 12rem auto 0 auto;
     max-width: 50rem;
+    transition: var(--transition-regular);
 }
 
 #search-form {
@@ -109,6 +129,9 @@ header a {
 }
 
 .search-bar-container {
+    /* position: sticky;
+    top: 0;
+    bottom: 0; */
     display: flex;
     justify-content: space-between;
     align-content: center;
@@ -126,10 +149,20 @@ header a {
 #search-button {
     all: unset;
     color: white;
+    margin-left: 0.5rem;
+    transition: var(--transition-regular);
 }
 
 #search-bar {
     width: 100%;
+}
+
+#search-button:hover {
+    color: var(--outline-main);
+}
+
+.empty-label {
+    text-align: center;
 }
 
 .more-button {
@@ -174,6 +207,13 @@ header a {
     color: var(--accent-red);
 }
 
+.hadith-skeleton {
+    width: 100%;
+    height: 1rem;
+    background-color: var(--bg-main);
+    border-radius: var(--border-radius-regular);
+}
+
 .translation-container {
     background-color: hsla(349, 99%, 54%, 0.2);
     border: 0.1rem solid var(--accent-red);
@@ -183,6 +223,14 @@ header a {
 
 .translated-hadith {
     margin-bottom: 1rem;
+}
+
+.translation-status {
+    color: var(--accent-red);
+}
+
+.static-text {
+    opacity: 0.7;
 }
 
 /*---------------- User note ----------------*/
@@ -198,15 +246,16 @@ header a {
     display: none;
 }
 
-.user-note * {
+.note-textarea,
+.note-save {
     all: unset;
-    border: 0.1rem solid #ffd500;
+    border: 0.1rem solid var(--yellow-regular);
     box-sizing: border-box;
-    overflow: hidden;
     margin-block: 0;
 }
 
 .note-textarea {
+    overflow: hidden;
     background-color: hsla(50, 100%, 50%, 0.2);
     border-radius: var(--border-radius-regular);
     width: 100%;
@@ -216,12 +265,18 @@ header a {
 
 .note-save {
     position: absolute;
-    right: 0;
+    left: 0;
     bottom: 0;
-    margin: 0.5rem;
-    padding: 0.5rem;
-    background-color: #ffd500;
-    border-radius: var(--border-radius-regular);
+    margin: 0.7rem;
+    padding: 0.3rem 0.5rem;
+    background-color: var(--yellow-regular);
+    border-radius: 0.5rem;
     text-align: center;
+    color: var(--bg-main);
+    transition: var(--transition-regular);
+}
+
+.note-save:hover {
+    background-color: var(--yellow-dark);
     color: var(--bg-main);
 }

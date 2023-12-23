@@ -38,21 +38,24 @@ export default function HadithBox(props) {
         diacritized: true,
     });
     const [translationStatus, setTranslationStatus] = useState("");
+    const [userNoteHidden, setUserNoteHidden] = useState(true);
 
     useEffect(() => {
         // Fix punctuations first
         const cleanedHadith = props.hadith
-            .replace(/ ،/g, "،")
-            .replace(/\. \./g, ".")
-            .replace(/ \./g, ".")
-            .replace(/ :/g, ":")
-            .replace(/ ؛/g, "؛")
-            .replace(/\( /g, "(")
-            .replace(/ \)/g, ")")
-            .replace(/{ /g, "{")
-            .replace(/ }/g, "}")
-            .replace(/\[ /g, "[")
-            .replace(/ \]/g, "]");
+            .replace(/\s\./g, ".")
+            .replace(/\s\./g, ".") // Doubled to replace instances where two dots are together with a space in between. Couldn't resolve the issue with the expression replace(/\.\s\./g, ".")
+            .replace(/,/g, "،")
+            .replace(/\s،/g, "،")
+            .replace(/\s:/g, ":")
+            .replace(/\s؛/g, "؛")
+            .replace(/\s!/g, "! ")
+            .replace(/\(\s/g, "(")
+            .replace(/\s\)/g, ")")
+            .replace(/{\s/g, "{")
+            .replace(/\s}/g, "}")
+            .replace(/\[\s/g, "[")
+            .replace(/\s\]/g, "]");
         setHadithStyle({
             withDiacritics: cleanedHadith,
             withoutDiacritics: cleanedHadith.normalize("NFD").replace(/[\u064B-\u0652\u0670]/g, ""), // u0652 instead of u0655 to preserve Hamza in Alif
@@ -139,7 +142,7 @@ export default function HadithBox(props) {
     }
 
     function handleBookmark() {
-        userNoteRef.current.classList.toggle("hidden");
+        setUserNoteHidden((prevUserNoteHidden) => !prevUserNoteHidden);
     }
 
     function handleCopy() {
@@ -159,8 +162,12 @@ export default function HadithBox(props) {
         }));
     }
 
+    function handleNoteSave() {
+        return;
+    }
+
     return (
-        <div className="hadith-box">
+        <div className="hadith-box" style={{ fontSize: "1rem" }}>
             <HadithByKeyword
                 hadithRef={hadithRef}
                 ref={contentTypeRef}
@@ -170,7 +177,7 @@ export default function HadithBox(props) {
                 translatedHadith={translatedHadith}
             />
 
-            <div className="user-note hidden" ref={userNoteRef}>
+            <div className={`user-note ${userNoteHidden && "hidden"}`} ref={userNoteRef}>
                 <textarea
                     placeholder="Type your note here"
                     rows={1}
@@ -179,7 +186,7 @@ export default function HadithBox(props) {
                     ref={noteTextareaRef}
                     onChange={adjustTextareaHeight}
                 />
-                <button className="note-save">
+                <button className="note-save" onClick={handleNoteSave}>
                     <FontAwesomeIcon icon={faCheck} />
                 </button>
             </div>
@@ -188,11 +195,14 @@ export default function HadithBox(props) {
                 <button className="option" onClick={handleCopy}>
                     <FontAwesomeIcon icon={faCopy} />
                 </button>
-                <button className="option" onClick={handleBookmark}>
+                <button
+                    className={`option ${!userNoteHidden && "pressed"}`}
+                    onClick={handleBookmark}
+                >
                     <FontAwesomeIcon icon={faBookmark} />
                 </button>
                 <button
-                    className={`option ${hadithStyle.diacritized ? "pressed" : ""}`}
+                    className={`option ${hadithStyle.diacritized && "pressed"}`}
                     onClick={() => handleDiacritics()}
                 >
                     <FontAwesomeIcon icon={faFeather} />
