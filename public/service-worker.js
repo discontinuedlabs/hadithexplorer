@@ -1,3 +1,5 @@
+import { precacheAndRoute } from "workbox-precaching";
+
 const cacheData = "mainCache";
 this.addEventListener("install", (event) => {
     event.waitUntil(
@@ -33,3 +35,5 @@ this.addEventListener("fetch", (event) => {
         })
     );
 });
+
+precacheAndRoute(this.__WB_MANIFEST);
