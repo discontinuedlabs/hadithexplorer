@@ -1,3 +1,4 @@
+// public/service-worker.js
 import { precacheAndRoute } from "workbox-precaching";
 
 const cacheData = "mainCache";
