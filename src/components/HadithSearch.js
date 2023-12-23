@@ -19,8 +19,8 @@ export default function HadithSearch(props) {
         if (query) {
             setSearchBarInput(query);
             handleSearch(query);
-            setLanguage(lang || "en");
         }
+        if (lang) setLanguage(lang);
     }, []);
 
     async function handleSearch(term) {
