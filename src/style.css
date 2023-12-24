@@ -19,7 +19,8 @@
     --shadow-regular: 0 0.2rem 0.5rem 0.1rem #0000004d;
     --shadow-small: 0 0.2rem 0.2rem 0.1rem #0000004d;
 
-    --transition-regular: all 0.2s ease-out;
+    --transition-regular: all 0.2s ease-in-out;
+    --transition-long: all 0.5s ease-in-out;
 }
 
 html {
@@ -39,7 +40,8 @@ html {
 }
 
 *:focus-visible {
-    border: solid white 0.3rem;
+    outline: solid rgba(255, 255, 255, 0.493) 0.2rem;
+    border-radius: var(--border-radius-regular);
 }
 
 ::selection {
@@ -50,6 +52,7 @@ html {
 body {
     background-color: var(--bg-main);
     color: white;
+    overscroll-behavior: contain;
 }
 
 button {
@@ -117,9 +120,17 @@ header a {
 
 .hadith-search {
     padding: var(--padding-regular);
-    margin: 12rem auto 0 auto;
+    margin: auto;
+    position: relative;
     max-width: 50rem;
-    transition: var(--transition-regular);
+    transform: translateY(calc(50vh - 60%));
+    transition: var(--transition-long);
+}
+
+h1.title {
+    text-align: center;
+    font-size: 3rem;
+    margin-bottom: 1rem;
 }
 
 #search-form {
@@ -135,6 +146,7 @@ header a {
     display: flex;
     justify-content: space-between;
     align-content: center;
+    gap: 0.5rem;
     border-radius: var(--border-radius-large);
     background-color: var(--bg-second);
     color: white;
@@ -149,7 +161,6 @@ header a {
 #search-button {
     all: unset;
     color: white;
-    margin-left: 0.5rem;
     transition: var(--transition-regular);
 }
 
@@ -260,12 +271,12 @@ header a {
     border-radius: var(--border-radius-regular);
     width: 100%;
     padding: var(--padding-regular);
-    padding-right: 2.5rem;
+    padding-inline-end: 2.5rem;
 }
 
 .note-save {
     position: absolute;
-    left: 0;
+    inset-inline-end: 0;
     bottom: 0;
     margin: 0.7rem;
     padding: 0.3rem 0.5rem;

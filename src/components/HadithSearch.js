@@ -9,6 +9,7 @@ export default function HadithSearch(props) {
     const [searchBarInput, setSearchBarInput] = useState("");
     const [searchTerm, setSearchTerm] = useState("");
     const [ahadith, setAhadith] = useState([]);
+    const [hadithSearchStyle, setHadithSearchStyle] = useState({});
 
     /* This function is mainly made for PrayTimePro adhkar reference, it searches based on the q param in the link
     example: http://discontinuedlabs.github.io/hadithexplorer/?q=search-term&lang=ar */
@@ -22,6 +23,13 @@ export default function HadithSearch(props) {
         }
         if (lang) setLanguage(lang);
     }, []);
+
+    useEffect(() => {
+        setHadithSearchStyle({
+            transform: `${ahadith.length > 0 ? "translateY(0)" : "translateY(calc(50vh - 60%))"}`,
+            marginTop: `${ahadith.length > 0 ? "5rem" : "auto"}`,
+        });
+    }, [ahadith.length]);
 
     async function handleSearch(term) {
         // setSearchTerm(term);
@@ -60,12 +68,8 @@ export default function HadithSearch(props) {
     }
 
     return (
-        <div
-            className="hadith-search"
-            style={{
-                marginTop: ahadith.length > 0 ? "5rem" : "",
-            }}
-        >
+        <div className="hadith-search" style={hadithSearchStyle}>
+            {!ahadith.length > 0 && <h1 className="title">HadithExplorer</h1>}
             <form
                 id="search-form"
                 onSubmit={(event) => {
