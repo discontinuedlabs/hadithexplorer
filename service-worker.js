@@ -11,7 +11,7 @@ const urlsToCache = [
 
 // eslint-disable-next-line no-restricted-globals
 self.addEventListener("install", (event) => {
-    event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll([urlsToCache])));
+    event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(urlsToCache)));
 });
 
 // eslint-disable-next-line no-restricted-globals
@@ -25,7 +25,7 @@ self.addEventListener("fetch", (event) => {
             return fetch(event.request)
                 .then((networkResponse) => {
                     // Save response to cache
-                    let cache = caches.open(cacheData);
+                    let cache = caches.open(CACHE_NAME);
                     cache.put(event.request, networkResponse.clone());
                     return networkResponse;
                 })
