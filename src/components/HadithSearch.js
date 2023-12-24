@@ -10,6 +10,8 @@ export default function HadithSearch(props) {
     const [searchTerm, setSearchTerm] = useState("");
     const [ahadith, setAhadith] = useState([]);
     const [hadithSearchStyle, setHadithSearchStyle] = useState({});
+    const [searchStatus, setSearchStatus] = useState("");
+    const AHADITH_LIMIT = 15; // Limit of returned Hadiths from dorar.net
 
     /* This function is mainly made for PrayTimePro adhkar reference, it searches based on the q param in the link
     example: http://discontinuedlabs.github.io/hadithexplorer/?q=search-term&lang=ar */
@@ -63,13 +65,15 @@ export default function HadithSearch(props) {
                     hadithInfo: hadithInfoElements[i]?.innerHTML || "",
                 }));
                 setAhadith(ahadithArray);
+                if (ahadithArray.length === 0)
+                    setSearchStatus(`Couldn't find any Hadith with the keyword "${term}"`);
             })
             .catch((error) => console.error(error));
     }
 
     return (
         <div className="hadith-search" style={hadithSearchStyle}>
-            {!ahadith.length > 0 && <h1 className="title">HadithExplorer</h1>}
+            {!ahadith.length > 0 && <h1 className="title unselectable">HadithExplorer</h1>}
             <form
                 id="search-form"
                 onSubmit={(event) => {
@@ -103,10 +107,12 @@ export default function HadithSearch(props) {
                 ))}
 
             {ahadith.length === 0 && (
-                <p className="empty-label">Begin by entering keywords to explore Hadiths</p>
+                <p className="empty-label">
+                    {searchStatus || "Begin by entering keywords to explore Hadiths"}
+                </p>
             )}
 
-            {ahadith.length > 0 && (
+            {ahadith.length === AHADITH_LIMIT && (
                 <button
                     className="more-button"
                     onClick={() =>

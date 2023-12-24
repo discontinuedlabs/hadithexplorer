@@ -49,6 +49,10 @@ html {
     color: white;
 }
 
+.unselectable {
+    user-select: none;
+}
+
 body {
     background-color: var(--bg-main);
     color: white;
@@ -129,7 +133,7 @@ header a {
 
 h1.title {
     text-align: center;
-    font-size: 3rem;
+    font-size: 2.5rem;
     margin-bottom: 1rem;
 }
 
@@ -150,7 +154,7 @@ h1.title {
     border-radius: var(--border-radius-large);
     background-color: var(--bg-second);
     color: white;
-    padding: 1.2rem;
+    padding: 0;
     width: 100%;
     margin-bottom: 1rem;
     border: 0.2rem solid var(--accent-red);
@@ -161,6 +165,8 @@ h1.title {
 #search-button {
     all: unset;
     color: white;
+    padding: 1.2rem;
+    border-radius: var(--border-radius-large);
     transition: var(--transition-regular);
 }
 

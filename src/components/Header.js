@@ -3,7 +3,7 @@ export default function Header(props) {
     return (
         <header>
             <a href=".">
-                <h2 className="title">HadithExplorer</h2>
+                <h2 className="title unselectable">HadithExplorer</h2>
             </a>
             <select
                 className="language-select"
