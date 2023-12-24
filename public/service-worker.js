@@ -1,20 +1,17 @@
 import { precacheAndRoute } from "workbox-precaching";
 
-const cacheData = "mainCache";
+const CACHE_NAME = "v1";
+const urlsToCache = [
+    "/static/js/main.chunk.js",
+    "/static/js/0.chunk.js",
+    "/static/js/bundle.js",
+    "/public/index.html",
+    "/",
+];
 
 // eslint-disable-next-line no-restricted-globals
 self.addEventListener("install", (event) => {
-    event.waitUntil(
-        caches.open(cacheData).then((cache) => {
-            cache.addAll([
-                "/static/js/main.chunk.js",
-                "/static/js/0.chunk.js",
-                "/static/js/bundle.js",
-                "/public/index.html",
-                "/",
-            ]);
-        })
-    );
+    event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll([urlsToCache])));
 });
 
 // eslint-disable-next-line no-restricted-globals
@@ -36,6 +33,24 @@ self.addEventListener("fetch", (event) => {
                     return cachedResponse; // Return cached response if network fails
                 });
         })
+    );
+});
+
+// eslint-disable-next-line no-restricted-globals
+self.addEventListener("activate", (event) => {
+    const cacheWhitelist = [];
+    cacheWhitelist.push(CACHE_NAME);
+
+    event.waitUntil(
+        caches.keys().then((cacheNames) =>
+            Promise.all(
+                cacheNames.map((cacheName) => {
+                    if (!cacheWhitelist.includes(cacheName)) {
+                        return caches.delete(cacheName);
+                    }
+                })
+            )
+        )
     );
 });
 
