@@ -1,17 +1,17 @@
 import { useState, useEffect, useRef } from "react";
+import { v4 as uuidv4 } from "uuid";
 import HadithByKeyword from "./HadithByKeyword";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFeather, faCopy, faCheck, faBookmark } from "@fortawesome/free-solid-svg-icons";
-
-const status = {
-    translating: "Translating...",
-    success: null,
-    failureInStructure: "Failed to identify the translated components: ",
-    failureInFetch: "Fialed to translate the Hadith.",
-};
+import {
+    faFeather,
+    faCopy,
+    faCheck,
+    faBookmark,
+    faPalette,
+} from "@fortawesome/free-solid-svg-icons";
 
 export default function HadithBox(props) {
-    const { language, hadithInfo } = props;
+    const { language, hadithInfo, addBookmark } = props;
     const hadithRef = useRef(null);
     const contentTypeRef = useRef(null);
     const noteTextareaRef = useRef(null);
@@ -39,6 +39,12 @@ export default function HadithBox(props) {
     });
     const [translationStatus, setTranslationStatus] = useState("");
     const [userNoteHidden, setUserNoteHidden] = useState(true);
+    const STATUS = {
+        translating: "Translating...",
+        success: null,
+        failureInStructure: "Failed to identify the translated components: ",
+        failureInFetch: "Fialed to translate the Hadith.",
+    };
 
     useEffect(() => {
         // Fix punctuations first
@@ -88,7 +94,7 @@ export default function HadithBox(props) {
             language !== "ar" &&
             !translatedHadith.content // This will ensure it doesnt get translated repetitively whenever handleDiacritics is called
         ) {
-            setTranslationStatus(status.translating);
+            setTranslationStatus(STATUS.translating);
 
             const combinedText = [
                 hadithRef.current.textContent, // Don't use hadith.content or hadithStyle values because they are stringified html elements
@@ -116,7 +122,7 @@ export default function HadithBox(props) {
                     setTranslationStatus(
                         splitTranslatedHadith.length === 6
                             ? null
-                            : status.failureInStructure + splitTranslatedHadith
+                            : STATUS.failureInStructure + splitTranslatedHadith
                     );
 
                     // Distribute hadith and hadithInfo into TranslatedHadith state object
@@ -130,7 +136,7 @@ export default function HadithBox(props) {
                     });
                 })
                 .catch((error) => {
-                    setTranslationStatus(status.failureInFetch);
+                    setTranslationStatus(STATUS.failureInFetch);
                     console.error(error);
                 });
         }
@@ -147,7 +153,7 @@ export default function HadithBox(props) {
 
     function handleCopy() {
         const type = "text/plain";
-        const blob = new Blob([contentTypeRef.current.textContent], {
+        const blob = new Blob([contentTypeRef.current.outerText], {
             type: type,
         });
         const item = new ClipboardItem({ [type]: blob });
@@ -163,11 +169,23 @@ export default function HadithBox(props) {
     }
 
     function handleNoteSave() {
+        const contentObject = {
+            content: contentTypeRef.current.outerHTML,
+            userNote: userNoteRef.current.children[0].value,
+            noteColor: "yellow",
+            id: uuidv4(),
+        };
+        addBookmark(contentObject);
+        userNoteRef.current.children[0].value = "";
+        setUserNoteHidden(true);
+    }
+
+    function handleColor() {
         return;
     }
 
     return (
-        <div className="hadith-box" style={{ fontSize: "1rem" }}>
+        <div className="hadith-box">
             <HadithByKeyword
                 hadithRef={hadithRef}
                 ref={contentTypeRef}
@@ -196,16 +214,19 @@ export default function HadithBox(props) {
                     <FontAwesomeIcon icon={faCopy} />
                 </button>
                 <button
+                    className={`option ${hadithStyle.diacritized && "pressed"}`}
+                    onClick={() => handleDiacritics()}
+                >
+                    <FontAwesomeIcon icon={faFeather} />
+                </button>
+                <button
                     className={`option ${!userNoteHidden && "pressed"}`}
                     onClick={handleBookmark}
                 >
                     <FontAwesomeIcon icon={faBookmark} />
                 </button>
-                <button
-                    className={`option ${hadithStyle.diacritized && "pressed"}`}
-                    onClick={() => handleDiacritics()}
-                >
-                    <FontAwesomeIcon icon={faFeather} />
+                <button className={`option ${userNoteHidden && "hidden"}`} onClick={handleColor}>
+                    <FontAwesomeIcon icon={faPalette} />
                 </button>
             </div>
         </div>

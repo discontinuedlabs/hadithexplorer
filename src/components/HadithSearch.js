@@ -1,17 +1,21 @@
 import { useState, useEffect } from "react";
-// import { v4 as uuidv4 } from "uuid";
 import HadithBox from "./HadithBox";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 
 export default function HadithSearch(props) {
-    const { language, setLanguage } = props;
+    const { language, setLanguage, offline, addBookmark } = props;
     const [searchBarInput, setSearchBarInput] = useState("");
     const [searchTerm, setSearchTerm] = useState("");
     const [ahadith, setAhadith] = useState([]);
     const [hadithSearchStyle, setHadithSearchStyle] = useState({});
     const [searchStatus, setSearchStatus] = useState("");
     const AHADITH_LIMIT = 15; // Limit of returned Hadiths from dorar.net
+    const STATUS = {
+        idle: "Begin by entering keywords to explore Hadiths.",
+        offline: "You're offline. Check your connection.",
+        nothingFound: `Couldn't find any Hadith with the keyword "${searchTerm}".`,
+    };
 
     /* This function is mainly made for PrayTimePro adhkar reference, it searches based on the q param in the link
     example: http://discontinuedlabs.github.io/hadithexplorer/?q=search-term&lang=ar */
@@ -27,16 +31,16 @@ export default function HadithSearch(props) {
     }, []);
 
     useEffect(() => {
-        setHadithSearchStyle({
-            transform: `${ahadith.length > 0 ? "translateY(0)" : "translateY(calc(50vh - 60%))"}`,
-            marginTop: `${ahadith.length > 0 ? "5rem" : "auto"}`,
-        });
-    }, [ahadith.length]);
+        if (ahadith.length === 0) {
+            if (offline) setSearchStatus(STATUS.offline);
+            else setSearchStatus(STATUS.idle);
+        }
+    }, [offline, ahadith.length]);
 
     async function handleSearch(term) {
-        // setSearchTerm(term);
         if (term) {
-            if (language === "ar") fetchAhadith(term);
+            const ARABIC_REGEX = /[\u0600-\u06FF\u0750-\u077F]/;
+            if (language === "ar" || ARABIC_REGEX.test(term)) fetchAhadith(term);
             else {
                 const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${language}&tl=ar&dt=t&q=${term}`;
                 try {
@@ -65,15 +69,16 @@ export default function HadithSearch(props) {
                     hadithInfo: hadithInfoElements[i]?.innerHTML || "",
                 }));
                 setAhadith(ahadithArray);
-                if (ahadithArray.length === 0)
-                    setSearchStatus(`Couldn't find any Hadith with the keyword "${term}"`);
+                if (ahadithArray.length === 0) setSearchStatus(STATUS.nothingFound);
             })
             .catch((error) => console.error(error));
     }
 
     return (
-        <div className="hadith-search" style={hadithSearchStyle}>
-            {!ahadith.length > 0 && <h1 className="title unselectable">HadithExplorer</h1>}
+        <div
+            className="hadith-search"
+            style={{ marginTop: `${ahadith.length > 0 ? "5rem" : "30vh"}` }}
+        >
             <form
                 id="search-form"
                 onSubmit={(event) => {
@@ -103,14 +108,11 @@ export default function HadithSearch(props) {
                         hadith={item.hadith}
                         hadithInfo={item.hadithInfo}
                         language={language}
+                        addBookmark={addBookmark}
                     />
                 ))}
 
-            {ahadith.length === 0 && (
-                <p className="empty-label">
-                    {searchStatus || "Begin by entering keywords to explore Hadiths"}
-                </p>
-            )}
+            {ahadith.length === 0 && <p className="empty-label">{searchStatus}</p>}
 
             {ahadith.length === AHADITH_LIMIT && (
                 <button

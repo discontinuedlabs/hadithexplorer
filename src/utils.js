@@ -3,10 +3,10 @@ import { useState } from "react";
 export function useLocalStorage(key, initialValue) {
     const [storedValue, setStoredValue] = useState(() => {
         try {
-            const item = window.localStorage.getItem(key);
+            const item = localStorage.getItem(key);
             return item ? JSON.parse(item) : initialValue;
         } catch (error) {
-            console.log(error);
+            console.error(error);
             return initialValue;
         }
     });
@@ -14,9 +14,9 @@ export function useLocalStorage(key, initialValue) {
     function setValue(value) {
         try {
             setStoredValue(value);
-            window.localStorage.setItem(key, JSON.stringify(value));
+            localStorage.setItem(key, JSON.stringify(value));
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
     }
 

@@ -4,7 +4,7 @@ function HadithByKeyword(props, ref) {
     const { hadithRef, hadith, language, translationStatus, translatedHadith } = props;
 
     return (
-        <div className="hadith-by-keyword content-type">
+        <div className="hadith-by-keyword content-type" ref={ref}>
             <div className="hadith-container" dir="rtl">
                 <b>
                     <div

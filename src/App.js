@@ -1,11 +1,13 @@
+import { useEffect, useState } from "react";
 import { useLocalStorage } from "./utils";
 import HadithSearch from "./components/HadithSearch";
 import Header from "./components/Header";
-import { useEffect, useState } from "react";
+import BookmarksPage from "./components/BookmarksPage";
 
 export default function App() {
     const [language, setLanguage] = useLocalStorage("language", "en");
     const [offline, setOffline] = useState(false);
+    const [bookmarks, setBookmarks] = useLocalStorage("bookmarks", []);
 
     useEffect(() => {
         function handleNetworkChange() {
@@ -22,11 +24,32 @@ export default function App() {
         };
     });
 
+    function addBookmark(newBookmark) {
+        setBookmarks([...bookmarks, newBookmark]);
+    }
+
+    function updateBookmarkValues(id, newValues) {
+        setBookmarks(
+            bookmarks.map((bookmark) => {
+                return bookmark.id === id ? { ...bookmark, ...newValues } : bookmark;
+            })
+        );
+    }
+
     return (
         <main className="app" dir={language === "ar" ? "rtl" : "ltr"}>
             <Header language={language} setLanguage={setLanguage} />
-            <HadithSearch language={language} setLanguage={setLanguage} />
-            <h1>{offline}</h1>
+            <HadithSearch
+                language={language}
+                setLanguage={setLanguage}
+                offline={offline}
+                addBookmark={addBookmark}
+            />
+            <BookmarksPage
+                bookmarks={bookmarks}
+                updateBookmarkValues={updateBookmarkValues}
+                setBookmarks={setBookmarks}
+            />
         </main>
     );
 }
