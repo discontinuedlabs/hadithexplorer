@@ -49,19 +49,11 @@ export default function HadithBox(props) {
     useEffect(() => {
         // Fix punctuations first
         const cleanedHadith = props.hadith
-            .replace(/\s\./g, ".")
-            .replace(/\s\./g, ".") // Doubled to replace instances where two dots are together with a space in between. Couldn't resolve the issue with the expression replace(/\.\s\./g, ".")
-            .replace(/,/g, "،")
-            .replace(/\s،/g, "،")
-            .replace(/\s:/g, ":")
-            .replace(/\s؛/g, "؛")
-            .replace(/\s!/g, "! ")
-            .replace(/\(\s/g, "(")
-            .replace(/\s\)/g, ")")
-            .replace(/{\s/g, "{")
-            .replace(/\s}/g, "}")
-            .replace(/\[\s/g, "[")
-            .replace(/\s\]/g, "]");
+            .replace(/\.\s+\./g, ".") // Replace two periods (with space between) with one period
+            .replace(/\s+/g, " ") // Replace multiple spaces with a single space
+            .replace(/\s?([.,:،؛!()\[\]])/g, "$1") // Remove space before punctuation
+            .replace(/"\s*(.*?)\s*"/g, '"$1"'); // Remove spaces surrounding quotation marks
+
         setHadithStyle({
             withDiacritics: cleanedHadith,
             withoutDiacritics: cleanedHadith.normalize("NFD").replace(/[\u064B-\u0652\u0670]/g, ""), // u0652 instead of u0655 to preserve Hamza in Alif
