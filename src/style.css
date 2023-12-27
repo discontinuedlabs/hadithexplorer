@@ -5,6 +5,7 @@
     --accent-red-dark: #9d0a25;
     --bg-main: #1a1d26;
     --bg-second: #2d313d;
+    --bg-third: #484d5c;
     --outline-main: #6a7086;
 
     --yellow-regular: #ffd500;
@@ -319,4 +320,56 @@ header a {
     box-shadow: var(--shadow-regular);
     display: grid;
     gap: 1rem;
+}
+
+/*---------------- Categories Search ----------------*/
+
+.categories-search {
+    padding: var(--padding-regular);
+    margin: auto;
+    position: relative;
+    max-width: 50rem;
+}
+
+.category {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--padding-regular);
+    height: fit-content;
+    width: 100%;
+    margin-bottom: 1rem;
+    border: 0.1rem solid var(--outline-main);
+    border-radius: var(--border-radius-regular);
+    background-color: var(--bg-second);
+    box-shadow: var(--shadow-small);
+    gap: 1rem;
+}
+
+.category:hover {
+    color: white;
+    background-color: var(--bg-third);
+    box-shadow: var(--shadow-regular);
+}
+
+.page-nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+
+.page-number {
+    text-align: center;
+    background-color: transparent;
+    padding: 0.5rem;
+    min-width: 2rem;
+    height: fit-content;
+    border-radius: var(--border-radius-regular);
+    box-sizing: border-box;
+}
+
+.page-number.current {
+    background-color: var(--accent-red);
+    color: white;
 }

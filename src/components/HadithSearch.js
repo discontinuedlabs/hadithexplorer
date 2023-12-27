@@ -4,11 +4,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 
 export default function HadithSearch(props) {
-    const { language, setLanguage, offline, addBookmark } = props;
+    const { language, setLanguage, offline, addBookmark, headerRef } = props;
     const [searchBarInput, setSearchBarInput] = useState("");
     const [searchTerm, setSearchTerm] = useState("");
     const [ahadith, setAhadith] = useState([]);
-    const [hadithSearchStyle, setHadithSearchStyle] = useState({});
     const [searchStatus, setSearchStatus] = useState("");
     const AHADITH_LIMIT = 15; // Limit of returned Hadiths from dorar.net
     const STATUS = {
@@ -27,8 +26,10 @@ export default function HadithSearch(props) {
             setSearchBarInput(query);
             handleSearch(query);
         }
-        if (lang) setLanguage(lang);
-    }, []);
+        if (lang && headerRef.current?.availableLanguages.contains(lang)) {
+            setLanguage(lang);
+        }
+    }, [headerRef.current?.availableLanguages]);
 
     useEffect(() => {
         if (ahadith.length === 0) {
