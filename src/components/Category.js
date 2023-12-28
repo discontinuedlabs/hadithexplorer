@@ -5,7 +5,7 @@ export default function Category(props) {
     return (
         <button className="category" onClick={() => openCategory(id, title)}>
             <h3>{title}</h3>
-            <p>{count}</p>
+            <p>{count || ""}</p>
         </button>
     );
 }

@@ -344,6 +344,7 @@ header a {
     background-color: var(--bg-second);
     box-shadow: var(--shadow-small);
     gap: 1rem;
+    box-sizing: border-box;
 }
 
 .category:hover {
@@ -356,7 +357,8 @@ header a {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 1rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
 }
 
 .page-number {
