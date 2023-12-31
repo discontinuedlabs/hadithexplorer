@@ -1,4 +1,4 @@
-import { forwardRef, useEffect, useRef, useState, useImperativeHandle } from "react";
+import { forwardRef, useEffect, useRef, useImperativeHandle } from "react";
 import { useLocalStorage } from "../utils";
 
 function Header(props, ref) {
@@ -11,20 +11,12 @@ function Header(props, ref) {
         fetch(URL)
             .then((response) => response.json())
             .then((data) => {
+                if (!availableLanguages) setAvailableLanguages([]);
                 data.forEach((element) => {
-                    const newOption = document.createElement("option");
-                    newOption.value = element.code;
-                    newOption.innerText = element.native;
-                    languageSelectRef.current.add(newOption);
-                    setAvailableLanguages((prevAvailableLanguages) => {
-                        if (!Array.isArray(prevAvailableLanguages)) {
-                            prevAvailableLanguages = [];
-                        }
-                        if (!prevAvailableLanguages.includes(element.code)) {
-                            return [...prevAvailableLanguages, element.code];
-                        }
-                        return prevAvailableLanguages;
-                    });
+                    setAvailableLanguages((prevAvailableLanguages) => [
+                        ...prevAvailableLanguages,
+                        { code: element.code, native: element.native },
+                    ]);
                 });
                 languageSelectRef.current.value = language || "en";
             })
@@ -49,7 +41,14 @@ function Header(props, ref) {
                 className="language-select"
                 value={language}
                 onChange={(event) => setLanguage(event.target.value)}
-            ></select>
+            >
+                {Array.isArray(availableLanguages) &&
+                    availableLanguages.map((element) => (
+                        <option value={element.code} key={element.code}>
+                            {element.native}
+                        </option>
+                    ))}
+            </select>
         </header>
     );
 }

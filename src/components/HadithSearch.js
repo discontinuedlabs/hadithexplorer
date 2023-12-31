@@ -18,18 +18,18 @@ export default function HadithSearch(props) {
 
     /* This function is mainly made for PrayTimePro adhkar reference, it searches based on the q param in the link
     example: http://discontinuedlabs.github.io/hadithexplorer/?q=search-term&lang=ar */
-    useEffect(() => {
-        const params = new URLSearchParams(window.location.search);
-        const query = params.get("q") || "";
-        const lang = params.get("lang");
-        if (query) {
-            setSearchBarInput(query);
-            handleSearch(query);
-        }
-        if (lang && headerRef.current?.availableLanguages.contains(lang)) {
-            setLanguage(lang);
-        }
-    }, [headerRef.current?.availableLanguages]);
+    // useEffect(() => {
+    //     const params = new URLSearchParams(window.location.search);
+    //     const query = params.get("q") || "";
+    //     const lang = params.get("lang");
+    //     if (query) {
+    //         setSearchBarInput(query);
+    //         handleSearch(query);
+    //     }
+    //     if (lang && headerRef.current?.availableLanguages.contains(lang)) {
+    //         setLanguage(lang);
+    //     }
+    // }, [headerRef.current?.availableLanguages]);
 
     useEffect(() => {
         if (ahadith.length === 0) {
