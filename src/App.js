@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { Route, Routes, Link } from "react-router-dom";
 import { useLocalStorage } from "./utils";
 import Header from "./components/Header";
 import HadithSearch from "./components/HadithSearch";
@@ -41,19 +42,47 @@ export default function App() {
     return (
         <main className="app" dir={language === "ar" ? "rtl" : "ltr"}>
             <Header language={language} setLanguage={setLanguage} ref={headerRef} />
-            <HadithSearch
-                language={language}
-                setLanguage={setLanguage}
-                offline={offline}
-                addBookmark={addBookmark}
-                headerRef={headerRef}
-            />
-            <CategoriesSearch language={language} />
-            <BookmarksPage
-                bookmarks={bookmarks}
-                updateBookmarkValues={updateBookmarkValues}
-                setBookmarks={setBookmarks}
-            />
+
+            <Routes>
+                <Route
+                    path="/hadithexplorer"
+                    element={
+                        <HadithSearch
+                            language={language}
+                            setLanguage={setLanguage}
+                            offline={offline}
+                            addBookmark={addBookmark}
+                            headerRef={headerRef}
+                        />
+                    }
+                />
+                <Route
+                    path="/hadithexplorer/categories"
+                    element={<CategoriesSearch language={language} />}
+                />
+                <Route
+                    path="/hadithexplorer/bookmarks"
+                    element={
+                        <BookmarksPage
+                            bookmarks={bookmarks}
+                            updateBookmarkValues={updateBookmarkValues}
+                            setBookmarks={setBookmarks}
+                        />
+                    }
+                />
+            </Routes>
+
+            <nav>
+                <li>
+                    <Link to="/hadithexplorer">Home</Link>
+                </li>
+                <li>
+                    <Link to="/hadithexplorer/categories">Categories</Link>
+                </li>
+                <li>
+                    <Link to="/hadithexplorer/bookmarks">Bookmarks</Link>
+                </li>
+            </nav>
         </main>
     );
 }
