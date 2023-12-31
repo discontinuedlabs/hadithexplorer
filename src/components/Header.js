@@ -1,8 +1,9 @@
 import { forwardRef, useEffect, useRef, useState, useImperativeHandle } from "react";
+import { useLocalStorage } from "../utils";
 
 function Header(props, ref) {
     const { language, setLanguage } = props;
-    const [availableLanguages, setAvailableLanguages] = useState([]);
+    const [availableLanguages, setAvailableLanguages] = useLocalStorage([]);
     const languageSelectRef = useRef(null);
 
     useEffect(() => {
@@ -15,10 +16,15 @@ function Header(props, ref) {
                     newOption.value = element.code;
                     newOption.innerText = element.native;
                     languageSelectRef.current.add(newOption);
-                    setAvailableLanguages((prevAvailableLanguages) => [
-                        ...prevAvailableLanguages,
-                        element.code,
-                    ]);
+                    setAvailableLanguages((prevAvailableLanguages) => {
+                        if (!Array.isArray(prevAvailableLanguages)) {
+                            prevAvailableLanguages = [];
+                        }
+                        if (!prevAvailableLanguages.includes(element.code)) {
+                            return [...prevAvailableLanguages, element.code];
+                        }
+                        return prevAvailableLanguages;
+                    });
                 });
                 languageSelectRef.current.value = language || "en";
             })

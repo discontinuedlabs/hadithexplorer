@@ -1,5 +1,3 @@
-import { precacheAndRoute } from "workbox-precaching";
-
 const CACHE_NAME = "v1";
 const urlsToCache = [
     "/static/js/main.chunk.js",
@@ -53,6 +51,3 @@ self.addEventListener("activate", (event) => {
         )
     );
 });
-
-// eslint-disable-next-line no-restricted-globals
-precacheAndRoute(self.__WB_MANIFEST);
