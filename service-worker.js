@@ -1,10 +1,10 @@
 const CACHE_NAME = "v1";
 const urlsToCache = [
-    "/static/js/main.chunk.js",
-    "/static/js/0.chunk.js",
-    "/static/js/bundle.js",
-    "/public/index.html",
-    "/",
+    "static/js/main.chunk.js",
+    "static/js/0.chunk.js",
+    "static/js/bundle.js",
+    "public/index.html",
+    "index.html",
 ];
 
 // eslint-disable-next-line no-restricted-globals
