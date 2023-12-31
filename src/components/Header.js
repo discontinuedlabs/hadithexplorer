@@ -3,7 +3,7 @@ import { useLocalStorage } from "../utils";
 
 function Header(props, ref) {
     const { language, setLanguage } = props;
-    const [availableLanguages, setAvailableLanguages] = useLocalStorage([]);
+    const [availableLanguages, setAvailableLanguages] = useLocalStorage("availableLanguages", []);
     const languageSelectRef = useRef(null);
 
     useEffect(() => {
@@ -12,12 +12,11 @@ function Header(props, ref) {
             .then((response) => response.json())
             .then((data) => {
                 if (!availableLanguages) setAvailableLanguages([]);
-                data.forEach((element) => {
-                    setAvailableLanguages((prevAvailableLanguages) => [
-                        ...prevAvailableLanguages,
-                        { code: element.code, native: element.native },
-                    ]);
-                });
+                setAvailableLanguages((prevAvailableLanguages) =>
+                    [...prevAvailableLanguages, ...data].filter(
+                        (item) => !prevAvailableLanguages.includes(item)
+                    )
+                );
                 languageSelectRef.current.value = language || "en";
             })
             .catch((error) => console.error(error));
